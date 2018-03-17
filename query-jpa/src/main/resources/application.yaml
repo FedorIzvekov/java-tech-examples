@@ -1,0 +1,8 @@
+server:
+  port: 8080
+
+logging:
+  pattern:
+    console: "%magenta(%d) %highlight(%-5level)[%cyan(%t)] %yellow(%logger{1.}): - %msg%n%throwable"
+  level:
+    org.springframework: INFO
