@@ -1,0 +1,23 @@
+version: '3.6'
+
+networks:
+  mariadb_network:
+    driver: bridge
+
+services:
+  maria_db:
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: testRoot123
+      MYSQL_DATABASE: query_jpa
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_User_123
+    ports:
+      - 3306:3306
+    volumes:
+      - ../../../data/mariadb:/var/lib/mysql
+      - ./sql/001_create_table_user.sql:/docker-entrypoint-initdb.d/001_create_table_user.sql
+      - ./sql/002_create_table_contact.sql:/docker-entrypoint-initdb.d/002_create_table_contact.sql
+    networks:
+      - mariadb_network
