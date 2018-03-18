@@ -3,6 +3,7 @@ package com.fedorizvekov.query.jpa.model.entity;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -51,8 +52,14 @@ public class User {
     @Builder.Default
     private Timestamps timestamps = new Timestamps();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Contact> contacts = new ArrayList<>();
+
+
+    public void addContact(Contact contact) {
+        contact.setUser(this);
+        this.contacts.add(contact);
+    }
 
 }

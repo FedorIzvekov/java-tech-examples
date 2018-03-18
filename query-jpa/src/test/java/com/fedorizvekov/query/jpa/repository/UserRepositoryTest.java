@@ -2,6 +2,7 @@ package com.fedorizvekov.query.jpa.repository;
 
 import static com.fedorizvekov.query.jpa.model.enums.ContactStatus.NOT_CONFIRMED;
 import static com.fedorizvekov.query.jpa.model.enums.ContactType.EMAIL;
+import static com.fedorizvekov.query.jpa.model.enums.ContactType.PHONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -87,22 +88,40 @@ public class UserRepositoryTest {
     }
 
 
-//    @Test
-//    public void should_save_contact() {
-////        User savedUser = userRepository.saveAndFlush(user);
-//        contact.setUser(user);
-//
-//        User user = userRepository.save(user);
-//
-//        assertThat(result.getContacts().get(0).getContactId()).isGreaterThan(0);
-//        assertThat(result.getValue()).isEqualTo("test_email@email.com");
-//        assertThat(result.getType()).isEqualTo(EMAIL);
-//        assertThat(result.getStatus()).isEqualTo(NOT_CONFIRMED);
-//        assertThat(result.getConfirmationCode()).isEqualTo("111");
-//        assertThat(result.getTimestamps().getCreated()).isAfterOrEqualTo(testDateTime);
-//        assertThat(result.getTimestamps().getUpdated()).isAfterOrEqualTo(testDateTime);
-//        assertThat(result.getUser().getUserId()).isGreaterThan(0);
-//        assertThat(result.getUser().getFirstName()).isEqualTo("test_name");
-//    }
+    @Test
+    public void should_save_user_with_contact() {
+        user.addContact(contact);
+
+        User result = userRepository.saveAndFlush(user);
+
+        assertThat(result.getContacts()).hasSize(1);
+        assertThat(result.getContacts().get(0).getContactId()).isGreaterThan(0);
+        assertThat(result.getContacts().get(0).getType()).isEqualTo(EMAIL);
+        assertThat(result.getContacts().get(0).getValue()).isEqualTo("test_email@email.com");
+        assertThat(result.getContacts().get(0).getTimestamps().getCreated()).isAfterOrEqualTo(testDateTime);
+        assertThat(result.getContacts().get(0).getTimestamps().getCreated()).isAfterOrEqualTo(testDateTime);
+    }
+
+
+    @Test
+    public void should_update_contact() {
+        user.addContact(contact);
+
+        User savedUser = entityManager.persist(user);
+        Contact savedContact = savedUser.getContacts().get(0);
+
+        savedContact.setType(PHONE);
+        savedContact.setValue("0000000000");
+
+        User resultUser = userRepository.saveAndFlush(user);
+        assertThat(resultUser.getContacts()).hasSize(1);
+
+        Contact resultContacts = savedUser.getContacts().get(0);
+        assertThat(resultContacts.getContactId()).isEqualTo(savedContact.getContactId());
+        assertThat(resultContacts.getType()).isEqualTo(PHONE);
+        assertThat(resultContacts.getValue()).isEqualTo("0000000000");
+        assertThat(resultContacts.getTimestamps().getCreated()).isEqualTo(savedContact.getTimestamps().getCreated());
+        assertThat(resultContacts.getTimestamps().getUpdated()).isAfter(savedContact.getTimestamps().getCreated());
+    }
 
 }
