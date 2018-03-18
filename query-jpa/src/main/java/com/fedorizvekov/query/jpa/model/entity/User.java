@@ -52,7 +52,7 @@ public class User {
     @Builder.Default
     private Timestamps timestamps = new Timestamps();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Contact> contacts = new ArrayList<>();
 
@@ -60,6 +60,12 @@ public class User {
     public void addContact(Contact contact) {
         contact.setUser(this);
         this.contacts.add(contact);
+    }
+
+
+    public void removeContact(Contact contact) {
+        contact.setUser(null);
+        this.contacts.remove(contact);
     }
 
 }

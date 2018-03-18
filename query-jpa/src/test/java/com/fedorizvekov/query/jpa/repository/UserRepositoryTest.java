@@ -124,4 +124,20 @@ public class UserRepositoryTest {
         assertThat(resultContacts.getTimestamps().getUpdated()).isAfter(savedContact.getTimestamps().getCreated());
     }
 
+
+    @Test
+    public void should_delete_contact() {
+        user.addContact(contact);
+        User savedUser = entityManager.persist(user);
+        Contact savedContact = savedUser.getContacts().get(0);
+
+        savedUser.removeContact(savedContact);
+
+        User resultUser = userRepository.saveAndFlush(savedUser);
+        assertThat(resultUser.getContacts()).hasSize(0);
+
+        Contact resultContacts = entityManager.find(Contact.class, savedContact.getContactId());
+        assertThat(resultContacts).isNull();
+    }
+
 }

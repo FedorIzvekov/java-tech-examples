@@ -48,8 +48,8 @@ public class Contact {
     @Builder.Default
     private Timestamps timestamps = new Timestamps();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
 }
