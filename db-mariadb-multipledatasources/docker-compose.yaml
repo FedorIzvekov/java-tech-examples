@@ -1,0 +1,44 @@
+version: '3.6'
+
+networks:
+  mariadb_first_network:
+    driver: bridge
+  mariadb_second_network:
+    driver: bridge
+
+services:
+  first_mariadb:
+    container_name: first_mariadb
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: testRoot123
+      MYSQL_DATABASE: multiple_data_sources
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_User_123
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../../../data/mariadb:/var/lib/mysql
+      - ./sql/mariadb/001_create_table_type_value.sql:/docker-entrypoint-initdb.d/001_create_table_type_value.sql
+      - ./sql/mariadb/002_first_shard_insert_rows.sql:/docker-entrypoint-initdb.d/002_first_shard_insert_rows.sql
+    networks:
+      - mariadb_first_network
+
+  second_mariadb:
+    container_name: second_mariadb
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: testRoot123
+      MYSQL_DATABASE: multiple_data_sources
+      MYSQL_USER: second_test_user
+      MYSQL_PASSWORD: test_User_123
+    ports:
+      - "3307:3306"
+    volumes:
+      - ../../../data/second_mariadb:/var/lib/mysql
+      - ./sql/mariadb/001_create_table_type_value.sql:/docker-entrypoint-initdb.d/001_create_table_type_value.sql
+      - ./sql/mariadb/002_second_shard_insert_rows.sql:/docker-entrypoint-initdb.d/002_second_shard_insert_rows.sql
+    networks:
+      - mariadb_second_network
