@@ -1,0 +1,25 @@
+version: '3.6'
+
+networks:
+  postgresql_network:
+    driver: bridge
+
+services:
+  postgresql:
+    container_name: db-postgresql
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_user_123
+      POSTGRES_DB: test_database
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../../../data/postgresql/data:/var/lib/postgresql/data
+      - ./sql/postgresql/001_create_schema.sql:/docker-entrypoint-initdb.d/001_create_schema.sql
+      - ./sql/postgresql/002_create_table_type_value.sql:/docker-entrypoint-initdb.d/002_create_table_type_value.sql
+      - ./sql/postgresql/003_insert_rows.sql:/docker-entrypoint-initdb.d/003_insert_rows.sql
+    networks:
+      - postgresql_network

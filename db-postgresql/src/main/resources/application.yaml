@@ -1,0 +1,35 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/test_database?currentSchema=test_schema
+    username: test_user
+    password: test_user_123
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: shutdown
+
+logging:
+  pattern:
+    console: "%magenta(%d) %highlight(%-5level)[%cyan(%t)] %yellow(%logger{1.}): - %msg%n%throwable"
+  level:
+    com.fedorizvekov.db.postgresql: INFO
+    org.springframework: INFO
+    com.zaxxer.hikari.HikariConfig: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type: INFO
+    org.hibernate.hql: INFO

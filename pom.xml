@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>db-postgresql</module>
         <module>db-mariadb-multipledatasources</module>
         <module>query-jpa</module>
     </modules>
