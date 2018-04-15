@@ -1,0 +1,35 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://;serverName=localhost;databaseName=test_database
+    username: test_user
+    password: TestUser#123
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: shutdown
+
+logging:
+  pattern:
+    console: "%magenta(%d) %highlight(%-5level)[%cyan(%t)] %yellow(%logger{1.}): - %msg%n%throwable"
+  level:
+    com.fedorizvekov.db.mssql: INFO
+    org.springframework: INFO
+    com.zaxxer.hikari.HikariConfig: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type: INFO
+    org.hibernate.hql: INFO

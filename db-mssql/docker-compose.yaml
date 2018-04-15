@@ -1,0 +1,57 @@
+version: '3.6'
+
+networks:
+  mssql_network:
+    driver: bridge
+
+services:
+  mssql:
+    container_name: db-mssql
+    image: mcr.microsoft.com/mssql/server
+    restart: unless-stopped
+    environment:
+      SA_PASSWORD: sa_user_123
+      ACCEPT_EULA: Y
+      MSSQL_PID: Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - ../../../data/mssql:/var/opt/mssql
+    healthcheck:
+      test:
+        [
+          "CMD", "/opt/mssql-tools/bin/sqlcmd",
+          "-U", "sa",
+          "-P", "sa_user_123",
+          "-Q", "SELECT 1"
+        ]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - mssql_network
+
+  mssql-init:
+    image: mcr.microsoft.com/mssql/server
+    network_mode: service:mssql
+    command: >
+      bash -c '
+        for file in ./docker-entrypoint-initdb.d/*.sql; do
+          echo "Executing SQL file $$file"
+          until /opt/mssql-tools/bin/sqlcmd -U sa -P sa_user_123 -i "$$file" > /dev/null; do
+            echo "Retry SQL execution for $$file"
+            sleep 1
+          done
+        done
+        exit 0
+      '
+    volumes:
+      - ./sql/mssql/001_create_database.sql:/docker-entrypoint-initdb.d/001_create_database.sql
+      - ./sql/mssql/002_create_schema.sql:/docker-entrypoint-initdb.d/002_create_schema.sql
+      - ./sql/mssql/003_create_user.sql:/docker-entrypoint-initdb.d/003_create_user.sql
+      - ./sql/mssql/004_create_sequence_seq_type_value.sql:/docker-entrypoint-initdb.d/004_create_sequence_seq_type_value.sql
+      - ./sql/mssql/005_create_table_type_value.sql:/docker-entrypoint-initdb.d/005_create_table_type_value.sql
+      - ./sql/mssql/006_insert_rows.sql:/docker-entrypoint-initdb.d/006_insert_rows.sql
+    depends_on:
+      mssql:
+        condition: service_healthy

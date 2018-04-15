@@ -1,0 +1,11 @@
+CREATE DATABASE test_database;
+GO
+
+USE test_database;
+GO
+
+SET ANSI_NULLS ON;
+GO
+
+SET QUOTED_IDENTIFIER ON;
+GO
