@@ -1,0 +1,24 @@
+version: '3.6'
+
+networks:
+  mysql_network:
+    driver: bridge
+
+services:
+  mysql:
+    container_name: db-mysql
+    image: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: test_Root_321
+      MYSQL_DATABASE: test_database
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_user_123
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../../../data/mysql:/var/lib/mysql
+      - ./sql/mysql/001_create_table_type_value.sql:/docker-entrypoint-initdb.d/001_create_table_type_value.sql
+      - ./sql/mysql/002_insert_rows.sql:/docker-entrypoint-initdb.d/002_insert_rows.sql
+    networks:
+      - mysql_network
