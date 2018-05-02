@@ -6,6 +6,7 @@ It consists of code examples, configurations and instructions divided into modul
 This project has modules:
 * [Database MsSQL](db-mssql/README.md#project-database-mssql)
 * [Database MySQL](db-mysql/README.md#project-database-mysql)
+* [Database Oracle](db-oracle/README.md#project-database-oracle)
 * [Database PostgreSQL](db-postgresql/README.md#project-database-postgresql)
 * [Database MariaDB multiple data sources](db-mariadb-multipledatasources/README.md#project-database-mariadb-multiple-data-sources)
 * [Query JPA](query-jpa/README.md#project-query-jpa)

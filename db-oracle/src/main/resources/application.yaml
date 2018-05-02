@@ -1,0 +1,35 @@
+server:
+  port: 8085
+
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//localhost:1521/test_database
+    username: test_user
+    password: TestUser#123
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: shutdown
+
+logging:
+  pattern:
+    console: "%magenta(%d) %highlight(%-5level)[%cyan(%t)] %yellow(%logger{1.}): - %msg%n%throwable"
+  level:
+    com.fedorizvekov.db.oracle: INFO
+    org.springframework: INFO
+    com.zaxxer.hikari.HikariConfig: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type: INFO
+    org.hibernate.hql: INFO

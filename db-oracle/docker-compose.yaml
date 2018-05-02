@@ -1,0 +1,24 @@
+version: '3.6'
+
+networks:
+  oracle_network:
+    driver: bridge
+
+services:
+  oracle:
+    container_name: db-oracle
+    image: gvenzl/oracle-free
+    restart: unless-stopped
+    environment:
+      ORACLE_PASSWORD: test_Root_321
+      ORACLE_DATABASE: test_database
+    ports:
+      - "1521:1521"
+    volumes:
+      - ../../../data/oracle:/opt/oracle/oradata
+      - ./sql/oracle/001_create_user_and_schema.sql:/container-entrypoint-initdb.d/001_create_user_and_schema.sql
+      - ./sql/oracle/002_create_sequence_seq_type_value.sql:/container-entrypoint-initdb.d/002_create_sequence_seq_type_value.sql
+      - ./sql/oracle/003_create_table_type_value.sql:/container-entrypoint-initdb.d/003_create_table_type_value.sql
+      - ./sql/oracle/004_insert_rows.sql:/container-entrypoint-initdb.d/004_insert_rows.sql
+    networks:
+      - oracle_network
