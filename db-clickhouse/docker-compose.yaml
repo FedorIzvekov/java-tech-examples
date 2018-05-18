@@ -1,0 +1,25 @@
+version: '3.6'
+
+networks:
+  clickhouse_network:
+    driver: bridge
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    container_name: db-clickhouse
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_DB: test_database
+      CLICKHOUSE_USER: test_user
+      CLICKHOUSE_PASSWORD: test_user_123
+    ports:
+      - "8123:8123"   # HTTP interface
+      - "9000:9000"   # Client port
+      - "9009:9009"   # Replication and internal communications between servers
+    volumes:
+      - ../../../data/clickhouse:/var/lib/clickhouse
+      - ./sql/clickhouse/001_create_table_type_value.sql:/docker-entrypoint-initdb.d/001_create_table_type_value.sql
+      - ./sql/clickhouse/002_insert_rows.sql:/docker-entrypoint-initdb.d/002_insert_rows.sql
+    networks:
+      - clickhouse_network

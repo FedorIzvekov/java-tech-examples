@@ -1,0 +1,38 @@
+server:
+  port: 8086
+
+spring:
+  datasource:
+    url: jdbc:clickhouse://localhost:8123/test_database
+    username: test_user
+    password: test_user_123
+    driver-class-name: ru.yandex.clickhouse.ClickHouseDriver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: shutdown
+
+logging:
+  pattern:
+    console: "%magenta(%d) %highlight(%-5level)[%cyan(%t)] %yellow(%logger{1.}): - %msg%n%throwable"
+  level:
+    com.fedorizvekov.db.clickhouse: INFO
+    org.springframework: INFO
+    com.zaxxer.hikari.HikariConfig: INFO
+    org.hibernate.SQL: INFO
+    org.hibernate.type: INFO
+    org.hibernate.hql: INFO
