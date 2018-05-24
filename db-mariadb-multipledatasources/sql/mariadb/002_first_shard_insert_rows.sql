@@ -15,9 +15,24 @@ INSERT INTO type_value (
     blob_value
 )
 VALUES (
-    'MARIADB first shard',
+    'MARIADB first shard (Кириллица тест)',
     VERSION(),
     'A',
+	STR_TO_DATE('1990-01-31', '%Y-%m-%d'),
+    STR_TO_DATE('10:30:59', '%H:%i:%s'),
+    STR_TO_DATE('1990-01-31 10:30:59', '%Y-%m-%d %H:%i:%s'),
+    1,
+    100,
+    1000,
+    1234.56,
+    1,
+    UNHEX(REPLACE("1b6b2e07-78dc-43f5-9d94-bd77304a545c", '-', '')),
+    LOAD_FILE('/var/lib/mysql/1.jpg')
+ ),
+ (
+    'MARIADB first shard (Кириллица тест)',
+    VERSION(),
+    'C',
     CURRENT_DATE(),
     CURRENT_TIME(),
     CURRENT_TIMESTAMP(),
@@ -26,6 +41,6 @@ VALUES (
     1000,
     1234.56,
     1,
-    UUID(),
+    UNHEX(REPLACE(UUID(), '-', '')),
     LOAD_FILE('/var/lib/mysql/1.jpg')
  );

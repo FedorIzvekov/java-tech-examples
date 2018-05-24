@@ -12,16 +12,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class DataSourceController {
+public class MariadbController {
 
     private final DatabaseApiService databaseApiService;
 
 
-    @GetMapping("/{database}/rows")
+    @GetMapping("/{api}/count/rows")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<String> getDatabaseRows(@PathVariable String database) {
-        return databaseApiService.getDatabaseRows(database);
+    public long countDatabaseRows(@PathVariable String api) {
+        return databaseApiService.countDatabaseRows(api);
+    }
+
+
+    @GetMapping("/{api}/row/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String getDatabaseRow(@PathVariable String api, @PathVariable long id) {
+        return databaseApiService.getDatabaseRow(id, api);
+    }
+
+
+    @GetMapping("/{api}/rows")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<String> getDatabaseRows(@PathVariable String api) {
+        return databaseApiService.getDatabaseRows(api);
     }
 
 }

@@ -67,7 +67,7 @@ public class TypeValue {
     @Column(name = "boolean_value", nullable = false)
     private Boolean booleanValue;
 
-    @Column(name = "uuid_value", nullable = false, columnDefinition = "uuid")
+    @Column(name = "uuid_value", nullable = false, columnDefinition = "BINARY(16)")
     private UUID uuidValue;
 
     @Transient

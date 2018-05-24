@@ -2,7 +2,12 @@ package com.fedorizvekov.db.mariadb.multipledatasources.repository.second;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 import com.fedorizvekov.db.mariadb.multipledatasources.config.MariadbConfig;
 import com.fedorizvekov.db.mariadb.multipledatasources.config.SecondMariadbConfig;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
@@ -28,7 +33,7 @@ public class SecondMariadbJpaRepositoryTest {
     public void shouldCount_rows_and_ReturnOne() {
         long result = repository.count();
 
-        assertThat(result).isEqualTo(1);
+        assertThat(result).isEqualTo(2);
     }
 
 
@@ -37,7 +42,17 @@ public class SecondMariadbJpaRepositoryTest {
         TypeValue result = repository.findById(1L).get();
 
         assertThat(result).isInstanceOfAny(TypeValue.class);
-        assertThat(result.getDatabaseName()).isEqualTo("MARIADB second shard");
+        assertThat(result.getDatabaseName()).isEqualTo("MARIADB second shard (Кириллица тест)");
+        assertThat(result.getCharValue()).isEqualTo('B');
+        assertThat(result.getLocalDateValue()).isEqualTo(LocalDate.parse("2000-12-01"));
+        assertThat(result.getLocalTimeValue()).isEqualTo(LocalTime.parse("10:30:59"));
+        assertThat(result.getLocalDateTimeValue()).isEqualTo(LocalDateTime.parse("2000-12-01T10:30:59"));
+        assertThat(result.getByteValue()).isEqualTo((byte) 2);
+        assertThat(result.getShortValue()).isEqualTo((short) 200);
+        assertThat(result.getIntegerValue()).isEqualTo(2000);
+        assertThat(result.getBigDecimalValue()).isEqualTo(BigDecimal.valueOf(5678.91));
+        assertThat(result.getBooleanValue()).isEqualTo(false);
+        assertThat(result.getUuidValue()).isEqualTo(UUID.fromString("afef2790-2dcb-4447-bae3-a34dbed182af"));
     }
 
 
@@ -45,9 +60,9 @@ public class SecondMariadbJpaRepositoryTest {
     public void shouldFind_allRows() {
         List<TypeValue> result = repository.findAll();
 
-        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0)).isInstanceOfAny(TypeValue.class);
-        assertThat(result.get(0).getDatabaseName()).isEqualTo("MARIADB second shard");
+        assertThat(result.get(0).getDatabaseName()).isEqualTo("MARIADB second shard (Кириллица тест)");
     }
 
 }

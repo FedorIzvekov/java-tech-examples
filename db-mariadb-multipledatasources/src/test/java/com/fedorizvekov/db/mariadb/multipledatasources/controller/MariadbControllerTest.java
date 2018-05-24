@@ -16,23 +16,45 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(DataSourceController.class)
-public class DataSourceControllerTest {
+@WebMvcTest(MariadbController.class)
+public class MariadbControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private DatabaseApiService databaseApiService;
+    private String api = "first_jpa";
+    private long id = 1L;
+
+
+    @Test
+    public void shouldInvoke_countDatabaseRows() throws Exception {
+        mockMvc.perform(get("/{api}/count/rows", api))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(databaseApiService).countDatabaseRows(eq(api));
+    }
+
+
+    @Test
+    public void shouldInvoke_getDatabaseRow() throws Exception {
+        mockMvc.perform(get("/{api}/row/{id}", api, id))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(databaseApiService).getDatabaseRow(eq(id), eq(api));
+    }
 
 
     @Test
     public void shouldInvoke_getDatabaseRows() throws Exception {
-        mockMvc.perform(get("/{database}/rows", "first_shard"))
+        mockMvc.perform(get("/{api}/rows", api))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(databaseApiService).getDatabaseRows(eq("first_shard"));
+        verify(databaseApiService).getDatabaseRows(eq(api));
     }
 
 }

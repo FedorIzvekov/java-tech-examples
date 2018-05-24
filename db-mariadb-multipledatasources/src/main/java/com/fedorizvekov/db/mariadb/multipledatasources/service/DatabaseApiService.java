@@ -4,6 +4,10 @@ import java.util.List;
 
 public interface DatabaseApiService {
 
-    List<String> getDatabaseRows(String databaseShard);
+    long countDatabaseRows(String api);
+
+    String getDatabaseRow(long id, String api);
+
+    List<String> getDatabaseRows(String api);
 
 }

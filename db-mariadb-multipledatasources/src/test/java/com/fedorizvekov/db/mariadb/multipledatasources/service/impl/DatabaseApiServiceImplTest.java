@@ -1,9 +1,11 @@
 package com.fedorizvekov.db.mariadb.multipledatasources.service.impl;
 
-import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.Shard.FIRST_SHARD;
-import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.Shard.SECOND_SHARD;
+import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.FIRST_JPA;
+import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.SECOND_JPA;
 import static java.util.Arrays.asList;
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,34 +49,56 @@ public class DatabaseApiServiceImplTest {
 
 
     @Test
-    public void shouldInvoke_mariadbJpaRepository() {
+    public void shouldInvoke_jpaFindAll() {
         when(jpaRepository.findAll()).thenReturn(asList(
-                firstRow.databaseName(FIRST_SHARD.name()).build(),
-                secondRow.databaseName(FIRST_SHARD.name()).build()
+                firstRow.databaseName(FIRST_JPA.name()).build(),
+                secondRow.databaseName(FIRST_JPA.name()).build()
         ));
 
-        List<String> result = databaseApiService.getDatabaseRows("first_shard");
+        List<String> result = databaseApiService.getDatabaseRows("first_jpa");
 
         assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0)).contains("TypeValue(longId=1, databaseName=FIRST_SHARD, stringValue=first");
-        assertThat(result.get(1)).contains("TypeValue(longId=1, databaseName=FIRST_SHARD, stringValue=second");
+        assertThat(result.get(0)).contains("TypeValue(longId=1, databaseName=FIRST_JPA, stringValue=first");
+        assertThat(result.get(1)).contains("TypeValue(longId=1, databaseName=FIRST_JPA, stringValue=second");
         verify(jpaRepository).findAll();
     }
 
 
     @Test
-    public void shouldInvoke_secondMariadbJpaRepository() {
+    public void shouldInvoke_secondJpaFindAll() {
         when(secondJpaRepository.findAll()).thenReturn(asList(
-                firstRow.databaseName(SECOND_SHARD.name()).build(),
-                secondRow.databaseName(SECOND_SHARD.name()).build()
+                firstRow.databaseName(SECOND_JPA.name()).build(),
+                secondRow.databaseName(SECOND_JPA.name()).build()
         ));
 
-        List<String> result = databaseApiService.getDatabaseRows("second_shard");
+        List<String> result = databaseApiService.getDatabaseRows("second_jpa");
 
         assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0)).contains("TypeValue(longId=1, databaseName=SECOND_SHARD, stringValue=first");
-        assertThat(result.get(1)).contains("TypeValue(longId=1, databaseName=SECOND_SHARD, stringValue=second");
+        assertThat(result.get(0)).contains("TypeValue(longId=1, databaseName=SECOND_JPA, stringValue=first");
+        assertThat(result.get(1)).contains("TypeValue(longId=1, databaseName=SECOND_JPA, stringValue=second");
         verify(secondJpaRepository).findAll();
+    }
+
+
+    @Test
+    public void shouldInvoke_jpaFindById() {
+        when(jpaRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(FIRST_JPA.name()).build()));
+
+        String result = databaseApiService.getDatabaseRow(1L, "first_jpa");
+
+        assertThat(result.toString()).contains("TypeValue(longId=1, databaseName=FIRST_JPA");
+        verify(jpaRepository).findById(1L);
+    }
+
+
+    @Test
+    public void shouldInvoke_secondJpaFindById() {
+        when(secondJpaRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(SECOND_JPA.name()).build()));
+
+        String result = databaseApiService.getDatabaseRow(1L, "second_jpa");
+
+        assertThat(result.toString()).contains("TypeValue(longId=1, databaseName=SECOND_JPA");
+        verify(secondJpaRepository).findById(1L);
     }
 
 
