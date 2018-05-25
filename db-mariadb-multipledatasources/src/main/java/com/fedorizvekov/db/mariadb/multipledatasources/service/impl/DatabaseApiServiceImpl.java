@@ -1,7 +1,5 @@
 package com.fedorizvekov.db.mariadb.multipledatasources.service.impl;
 
-import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.FIRST_JPA;
-import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.SECOND_JPA;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -10,6 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType;
+import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJdbcRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJpaRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.second.SecondMariadbJpaRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.service.DatabaseApiService;
@@ -22,24 +21,23 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
 
     private final MariadbJpaRepository jpaRepository;
     private final SecondMariadbJpaRepository secondJpaRepository;
+    private final MariadbJdbcRepository jdbcRepository;
 
 
     public long countDatabaseRows(String databaseShard) {
 
         ApiType apiType = ApiType.fromName(databaseShard);
-        long count = 0L;
 
-        if (apiType == FIRST_JPA) {
-
-            count = jpaRepository.count();
-
-        } else if (apiType == SECOND_JPA) {
-
-            count = secondJpaRepository.count();
-
+        switch (apiType) {
+            case FIRST_JPA:
+                return jpaRepository.count();
+            case SECOND_JPA:
+                return secondJpaRepository.count();
+            case FIRST_JDBC:
+                return jdbcRepository.count();
+            default:
+                return 0L;
         }
-
-        return count;
 
     }
 
@@ -47,20 +45,18 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
     public String getDatabaseRow(long id, String api) {
 
         ApiType apiType = ApiType.fromName(api);
-        TypeValue typeValue = TypeValue.builder().build();
 
-        if (apiType == FIRST_JPA) {
-
-            typeValue = jpaRepository.findById(id).get();
-
-        } else if (apiType == SECOND_JPA) {
-
-            typeValue = secondJpaRepository.findById(id).get();
+        switch (apiType) {
+            case FIRST_JPA:
+                return jpaRepository.findById(id).get().toString();
+            case SECOND_JPA:
+                return secondJpaRepository.findById(id).get().toString();
+            case FIRST_JDBC:
+                return jdbcRepository.findById(id).get().toString();
+            default:
+                return TypeValue.builder().build().toString();
 
         }
-
-        return typeValue.toString();
-
     }
 
 
@@ -69,14 +65,16 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
         ApiType apiType = ApiType.fromName(databaseShard);
         List<TypeValue> list = emptyList();
 
-        if (apiType == FIRST_JPA) {
-
-            list = jpaRepository.findAll();
-
-        } else if (apiType == SECOND_JPA) {
-
-            list = secondJpaRepository.findAll();
-
+        switch (apiType) {
+            case FIRST_JPA:
+                list = jpaRepository.findAll();
+                break;
+            case SECOND_JPA:
+                list = secondJpaRepository.findAll();
+                break;
+            case FIRST_JDBC:
+                list = jdbcRepository.findAll();
+                break;
         }
 
         return list.isEmpty()

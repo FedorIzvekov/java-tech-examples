@@ -6,7 +6,8 @@ import lombok.extern.log4j.Log4j2;
 public enum ApiType {
     UNKNOWN,
     FIRST_JPA,
-    SECOND_JPA;
+    SECOND_JPA,
+    FIRST_JDBC;
 
 
     public static ApiType fromName(String name) {

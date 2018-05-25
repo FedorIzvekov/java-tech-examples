@@ -1,5 +1,6 @@
 package com.fedorizvekov.db.mariadb.multipledatasources.service.impl;
 
+import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.FIRST_JDBC;
 import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.FIRST_JPA;
 import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.SECOND_JPA;
 import static java.util.Arrays.asList;
@@ -12,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
+import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJdbcRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJpaRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.second.SecondMariadbJpaRepository;
 import org.junit.Before;
@@ -31,6 +33,8 @@ public class DatabaseApiServiceImplTest {
     private MariadbJpaRepository jpaRepository;
     @Mock
     private SecondMariadbJpaRepository secondJpaRepository;
+    @Mock
+    private MariadbJdbcRepository jdbcRepository;
 
     private TypeValue.TypeValueBuilder firstRow;
     private TypeValue.TypeValueBuilder secondRow;
@@ -55,7 +59,7 @@ public class DatabaseApiServiceImplTest {
                 secondRow.databaseName(FIRST_JPA.name()).build()
         ));
 
-        List<String> result = databaseApiService.getDatabaseRows("first_jpa");
+        List<String> result = databaseApiService.getDatabaseRows(FIRST_JPA.name());
 
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0)).contains("TypeValue(longId=1, databaseName=FIRST_JPA, stringValue=first");
@@ -71,7 +75,7 @@ public class DatabaseApiServiceImplTest {
                 secondRow.databaseName(SECOND_JPA.name()).build()
         ));
 
-        List<String> result = databaseApiService.getDatabaseRows("second_jpa");
+        List<String> result = databaseApiService.getDatabaseRows(SECOND_JPA.name());
 
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0)).contains("TypeValue(longId=1, databaseName=SECOND_JPA, stringValue=first");
@@ -84,7 +88,7 @@ public class DatabaseApiServiceImplTest {
     public void shouldInvoke_jpaFindById() {
         when(jpaRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(FIRST_JPA.name()).build()));
 
-        String result = databaseApiService.getDatabaseRow(1L, "first_jpa");
+        String result = databaseApiService.getDatabaseRow(1L, FIRST_JPA.name());
 
         assertThat(result.toString()).contains("TypeValue(longId=1, databaseName=FIRST_JPA");
         verify(jpaRepository).findById(1L);
@@ -95,10 +99,37 @@ public class DatabaseApiServiceImplTest {
     public void shouldInvoke_secondJpaFindById() {
         when(secondJpaRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(SECOND_JPA.name()).build()));
 
-        String result = databaseApiService.getDatabaseRow(1L, "second_jpa");
+        String result = databaseApiService.getDatabaseRow(1L, SECOND_JPA.name());
 
         assertThat(result.toString()).contains("TypeValue(longId=1, databaseName=SECOND_JPA");
         verify(secondJpaRepository).findById(1L);
+    }
+
+
+    @Test
+    public void shouldInvoke_jdbcFindAll() {
+        when(jdbcRepository.findAll()).thenReturn(asList(
+                firstRow.databaseName(FIRST_JDBC.name()).build(),
+                secondRow.databaseName(FIRST_JDBC.name()).build()
+        ));
+
+        List<String> result = databaseApiService.getDatabaseRows(FIRST_JDBC.name());
+
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0)).contains("TypeValue(longId=1, databaseName=FIRST_JDBC, stringValue=first");
+        assertThat(result.get(1)).contains("TypeValue(longId=1, databaseName=FIRST_JDBC, stringValue=second");
+        verify(jdbcRepository).findAll();
+    }
+
+
+    @Test
+    public void shouldInvoke_jdbcFindById() {
+        when(jdbcRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(FIRST_JDBC.name()).build()));
+
+        String result = databaseApiService.getDatabaseRow(1L, FIRST_JDBC.name());
+
+        assertThat(result.toString()).contains("TypeValue(longId=1, databaseName=FIRST_JDBC");
+        verify(jdbcRepository).findById(1L);
     }
 
 
