@@ -7,7 +7,8 @@ public enum ApiType {
     UNKNOWN,
     FIRST_JPA,
     SECOND_JPA,
-    FIRST_JDBC;
+    FIRST_JDBC,
+    SECOND_JDBC;
 
 
     public static ApiType fromName(String name) {

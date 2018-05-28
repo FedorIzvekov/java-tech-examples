@@ -10,6 +10,7 @@ import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJdbcRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJpaRepository;
+import com.fedorizvekov.db.mariadb.multipledatasources.repository.second.MariadbJdbcTemplateRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.second.SecondMariadbJpaRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.service.DatabaseApiService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
     private final MariadbJpaRepository jpaRepository;
     private final SecondMariadbJpaRepository secondJpaRepository;
     private final MariadbJdbcRepository jdbcRepository;
+    private final MariadbJdbcTemplateRepository jdbcTemplateRepository;
 
 
     public long countDatabaseRows(String databaseShard) {
@@ -35,6 +37,8 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
                 return secondJpaRepository.count();
             case FIRST_JDBC:
                 return jdbcRepository.count();
+            case SECOND_JDBC:
+                return jdbcTemplateRepository.count();
             default:
                 return 0L;
         }
@@ -53,6 +57,8 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
                 return secondJpaRepository.findById(id).get().toString();
             case FIRST_JDBC:
                 return jdbcRepository.findById(id).get().toString();
+            case SECOND_JDBC:
+                return jdbcTemplateRepository.findById(id).get().toString();
             default:
                 return TypeValue.builder().build().toString();
 
@@ -74,6 +80,9 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
                 break;
             case FIRST_JDBC:
                 list = jdbcRepository.findAll();
+                break;
+            case SECOND_JDBC:
+                list = jdbcTemplateRepository.findAll();
                 break;
         }
 
