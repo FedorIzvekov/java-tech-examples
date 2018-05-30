@@ -1,13 +1,10 @@
 package com.fedorizvekov.db.mariadb.multipledatasources.repository.second;
 
+import static com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJdbcRepositoryTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import com.fedorizvekov.db.mariadb.multipledatasources.config.MariadbConfig;
 import com.fedorizvekov.db.mariadb.multipledatasources.config.SecondMariadbConfig;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
@@ -43,16 +40,25 @@ public class SecondMariadbJpaRepositoryTest {
 
         assertThat(result).isInstanceOfAny(TypeValue.class);
         assertThat(result.getDatabaseName()).isEqualTo("MARIADB second shard (Кириллица тест)");
-        assertThat(result.getCharValue()).isEqualTo('B');
-        assertThat(result.getLocalDateValue()).isEqualTo(LocalDate.parse("2000-12-01"));
-        assertThat(result.getLocalTimeValue()).isEqualTo(LocalTime.parse("10:30:59"));
-        assertThat(result.getLocalDateTimeValue()).isEqualTo(LocalDateTime.parse("2000-12-01T10:30:59"));
-        assertThat(result.getByteValue()).isEqualTo((byte) 2);
-        assertThat(result.getShortValue()).isEqualTo((short) 200);
-        assertThat(result.getIntegerValue()).isEqualTo(2000);
-        assertThat(result.getBigDecimalValue()).isEqualTo(BigDecimal.valueOf(5678.91));
-        assertThat(result.getBooleanValue()).isEqualTo(false);
-        assertThat(result.getUuidValue()).isEqualTo(UUID.fromString("afef2790-2dcb-4447-bae3-a34dbed182af"));
+        assertThat(result.getCharValue()).isEqualTo(CHAR);
+        assertThat(result.getLocalDateValue()).isEqualTo(LOCAL_DATE);
+        assertThat(result.getLocalTimeValue()).isEqualTo(LOCAL_TIME);
+        assertThat(result.getLocalDateTimeValue()).isEqualTo(LOCAL_DATE_TIME);
+        assertThat(result.getByteValue()).isEqualTo(BYTE);
+        assertThat(result.getShortValue()).isEqualTo(SHORT);
+        assertThat(result.getIntegerValue()).isEqualTo(INTEGER);
+        assertThat(result.getBigDecimalValue()).isEqualTo(BIG_DECIMAL);
+        assertThat(result.getBooleanValue()).isEqualTo(BOOLEAN);
+        assertThat(result.getUuidValue()).isEqualTo(UUID_TEST);
+    }
+
+
+    @Test
+    public void shouldNotFound_rowById() {
+        Optional<TypeValue> result = repository.findById(777L);
+
+        assertThat(result).isInstanceOfAny(Optional.class);
+        assertThat(result.isPresent()).isFalse();
     }
 
 

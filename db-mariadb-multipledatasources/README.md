@@ -38,15 +38,30 @@ java -jar ./target/db-mariadb-multipledatasources-1.0.0-SNAPSHOT.jar
 
 ## Checking
 
+### JPA
+
 ```
-curl -v http://localhost:8081/first_jpa/count/rows
-curl -v http://localhost:8081/second_jpa/count/rows
+curl -v http://localhost:8081/first_jpa/rows/count
+curl -v http://localhost:8081/second_jpa/rows/count
 
 curl -v http://localhost:8081/first_jpa/row/1
 curl -v http://localhost:8081/second_jpa/row/1
 
 curl -v http://localhost:8081/first_jpa/rows
 curl -v http://localhost:8081/second_jpa/rows
+```
+
+### JDBC
+
+```
+curl -v http://localhost:8081/first_jdbc/rows/count
+curl -v http://localhost:8081/second_jdbc/rows/count
+
+curl -v http://localhost:8081/first_jdbc/row/1
+curl -v http://localhost:8081/second_jdbc/row/1
+
+curl -v http://localhost:8081/first_jdbc/rows
+curl -v http://localhost:8081/second_jdbc/rows
 ```
 
 ## Stopping

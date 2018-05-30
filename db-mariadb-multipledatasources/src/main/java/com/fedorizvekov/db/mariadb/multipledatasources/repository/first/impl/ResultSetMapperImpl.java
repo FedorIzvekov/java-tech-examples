@@ -9,7 +9,6 @@ import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.ResultSe
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @RequiredArgsConstructor
 public class ResultSetMapperImpl implements ResultSetMapper {
@@ -30,7 +29,6 @@ public class ResultSetMapperImpl implements ResultSetMapper {
                 .booleanValue(resultSet.getBoolean("boolean_value"))
                 .uuidValue(binaryToUUID(resultSet.getBytes("uuid_value")))
                 .build();
-
     }
 
 

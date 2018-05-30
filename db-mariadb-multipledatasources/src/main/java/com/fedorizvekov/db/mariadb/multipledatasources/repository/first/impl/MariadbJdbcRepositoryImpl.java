@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import com.fedorizvekov.db.mariadb.multipledatasources.exception.DataBaseException;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJdbcRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.ResultSetMapper;
@@ -47,7 +48,8 @@ public class MariadbJdbcRepositoryImpl implements MariadbJdbcRepository {
             }
 
         } catch (SQLException exception) {
-            log.error("Something went wrong, because: ", exception);
+            log.error("SQLException, because: ", exception);
+            throw new DataBaseException(exception.getMessage());
         }
 
         return 0;
@@ -70,7 +72,8 @@ public class MariadbJdbcRepositoryImpl implements MariadbJdbcRepository {
             }
 
         } catch (SQLException exception) {
-            log.error("Something went wrong, because: ", exception);
+            log.error("SQLException, because: ", exception);
+            throw new DataBaseException(exception.getMessage());
         }
 
         return Optional.empty();
@@ -90,7 +93,8 @@ public class MariadbJdbcRepositoryImpl implements MariadbJdbcRepository {
             }
 
         } catch (SQLException exception) {
-            log.error("Something went wrong, because: ", exception);
+            log.error("SQLException, because: ", exception);
+            throw new DataBaseException(exception.getMessage());
         }
 
         return typeValues;

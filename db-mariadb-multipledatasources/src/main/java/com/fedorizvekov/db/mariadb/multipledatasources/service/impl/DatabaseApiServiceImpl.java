@@ -1,11 +1,12 @@
 package com.fedorizvekov.db.mariadb.multipledatasources.service.impl;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import com.fedorizvekov.db.mariadb.multipledatasources.exception.NotFoundException;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJdbcRepository;
@@ -26,70 +27,77 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
     private final MariadbJdbcTemplateRepository jdbcTemplateRepository;
 
 
-    public long countDatabaseRows(String databaseShard) {
+    public long countDatabaseRows(String api) {
 
-        ApiType apiType = ApiType.fromName(databaseShard);
+        ApiType apiType = ApiType.fromName(api);
+        long count = 0L;
 
         switch (apiType) {
             case FIRST_JPA:
-                return jpaRepository.count();
+                count = jpaRepository.count();
+                break;
             case SECOND_JPA:
-                return secondJpaRepository.count();
+                count = secondJpaRepository.count();
+                break;
             case FIRST_JDBC:
-                return jdbcRepository.count();
+                count = jdbcRepository.count();
+                break;
             case SECOND_JDBC:
-                return jdbcTemplateRepository.count();
-            default:
-                return 0L;
+                count = jdbcTemplateRepository.count();
+                break;
         }
 
+        return count;
     }
 
 
     public String getDatabaseRow(long id, String api) {
 
         ApiType apiType = ApiType.fromName(api);
+        Optional<TypeValue> typeValue = Optional.empty();
 
         switch (apiType) {
             case FIRST_JPA:
-                return jpaRepository.findById(id).get().toString();
+                typeValue = jpaRepository.findById(id);
+                break;
             case SECOND_JPA:
-                return secondJpaRepository.findById(id).get().toString();
+                typeValue = secondJpaRepository.findById(id);
+                break;
             case FIRST_JDBC:
-                return jdbcRepository.findById(id).get().toString();
+                typeValue = jdbcRepository.findById(id);
+                break;
             case SECOND_JDBC:
-                return jdbcTemplateRepository.findById(id).get().toString();
-            default:
-                return TypeValue.builder().build().toString();
-
+                typeValue = jdbcTemplateRepository.findById(id);
+                break;
         }
+
+        return typeValue
+                .orElseThrow(() -> new NotFoundException("Not found TypeValue with id '" + id + "'"))
+                .toString();
     }
 
 
-    public List<String> getDatabaseRows(String databaseShard) {
+    public List<String> getDatabaseRows(String api) {
 
-        ApiType apiType = ApiType.fromName(databaseShard);
-        List<TypeValue> list = emptyList();
+        ApiType apiType = ApiType.fromName(api);
+        List<TypeValue> typeValues = emptyList();
 
         switch (apiType) {
             case FIRST_JPA:
-                list = jpaRepository.findAll();
+                typeValues = jpaRepository.findAll();
                 break;
             case SECOND_JPA:
-                list = secondJpaRepository.findAll();
+                typeValues = secondJpaRepository.findAll();
                 break;
             case FIRST_JDBC:
-                list = jdbcRepository.findAll();
+                typeValues = jdbcRepository.findAll();
                 break;
             case SECOND_JDBC:
-                list = jdbcTemplateRepository.findAll();
+                typeValues = jdbcTemplateRepository.findAll();
                 break;
         }
 
-        return list.isEmpty()
-                ? singletonList("QueryPerformanceJpaApp not support shard: '" + apiType + "'")
-                : list.stream().map(Objects::toString).collect(Collectors.toList());
-
+        return typeValues.stream().map(Objects::toString).collect(Collectors.toList());
     }
 
 }

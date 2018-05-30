@@ -1,5 +1,6 @@
 package com.fedorizvekov.db.mariadb.multipledatasources.controller;
 
+import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.FIRST_JPA;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,18 +20,23 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(MariadbController.class)
 public class MariadbControllerTest {
 
+    public static final String COUNT_ENDPOINT = "/{api}/rows/count";
+    public static final String ROW_BY_ID_ENDPOINT = "/{api}/row/{id}";
+    public static final String ROWS_ENDPOINT = "/{api}/rows";
+    public static final long ID = 1L;
+
+    private final String api = FIRST_JPA.name();
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private DatabaseApiService databaseApiService;
-    private String api = "first_jpa";
-    private long id = 1L;
 
 
     @Test
     public void shouldInvoke_countDatabaseRows() throws Exception {
-        mockMvc.perform(get("/{api}/count/rows", api))
+        mockMvc.perform(get(COUNT_ENDPOINT, api))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -40,17 +46,17 @@ public class MariadbControllerTest {
 
     @Test
     public void shouldInvoke_getDatabaseRow() throws Exception {
-        mockMvc.perform(get("/{api}/row/{id}", api, id))
+        mockMvc.perform(get(ROW_BY_ID_ENDPOINT, api, ID))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(databaseApiService).getDatabaseRow(eq(id), eq(api));
+        verify(databaseApiService).getDatabaseRow(eq(ID), eq(api));
     }
 
 
     @Test
     public void shouldInvoke_getDatabaseRows() throws Exception {
-        mockMvc.perform(get("/{api}/rows", api))
+        mockMvc.perform(get(ROWS_ENDPOINT, api))
                 .andDo(print())
                 .andExpect(status().isOk());
 

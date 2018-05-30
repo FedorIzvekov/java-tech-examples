@@ -6,18 +6,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/{api}")
 @RequiredArgsConstructor
 public class MariadbController {
 
     private final DatabaseApiService databaseApiService;
 
 
-    @GetMapping("/{api}/count/rows")
+    @GetMapping("/rows/count")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public long countDatabaseRows(@PathVariable String api) {
@@ -25,7 +27,7 @@ public class MariadbController {
     }
 
 
-    @GetMapping("/{api}/row/{id}")
+    @GetMapping("/row/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public String getDatabaseRow(@PathVariable String api, @PathVariable long id) {
@@ -33,7 +35,7 @@ public class MariadbController {
     }
 
 
-    @GetMapping("/{api}/rows")
+    @GetMapping("/rows")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<String> getDatabaseRows(@PathVariable String api) {

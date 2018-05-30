@@ -9,10 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @RequiredArgsConstructor
-public class RowMapperImpl implements RowMapper {
+public class RowMapperImpl implements RowMapper<TypeValue> {
 
     public TypeValue mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return TypeValue.builder()
@@ -30,7 +29,6 @@ public class RowMapperImpl implements RowMapper {
                 .booleanValue(resultSet.getBoolean("boolean_value"))
                 .uuidValue(binaryToUUID(resultSet.getBytes("uuid_value")))
                 .build();
-
     }
 
 

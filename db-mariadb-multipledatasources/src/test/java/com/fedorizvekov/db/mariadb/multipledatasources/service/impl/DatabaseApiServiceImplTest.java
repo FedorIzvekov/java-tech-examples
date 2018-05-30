@@ -2,21 +2,22 @@ package com.fedorizvekov.db.mariadb.multipledatasources.service.impl;
 
 import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.FIRST_JDBC;
 import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.FIRST_JPA;
+import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.SECOND_JDBC;
 import static com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType.SECOND_JPA;
-import static java.util.Arrays.asList;
 import static java.util.Optional.of;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
+import java.util.Optional;
+import com.fedorizvekov.db.mariadb.multipledatasources.exception.InvalidApiTypeException;
+import com.fedorizvekov.db.mariadb.multipledatasources.exception.NotFoundException;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJdbcRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJpaRepository;
+import com.fedorizvekov.db.mariadb.multipledatasources.repository.second.MariadbJdbcTemplateRepository;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.second.SecondMariadbJpaRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DatabaseApiServiceImplTest {
+
+    private final long id = 1L;
+    private final String apiFirstJpa = FIRST_JPA.name();
+    private final String apiSecondJpa = SECOND_JPA.name();
+    private final String apiFirstJdbc = FIRST_JDBC.name();
+    private final String apiSecondJdbc = SECOND_JDBC.name();
+    private final TypeValue.TypeValueBuilder firstRow = TypeValue.builder().longId(id);
 
     @InjectMocks
     private DatabaseApiServiceImpl databaseApiService;
@@ -35,111 +43,140 @@ public class DatabaseApiServiceImplTest {
     private SecondMariadbJpaRepository secondJpaRepository;
     @Mock
     private MariadbJdbcRepository jdbcRepository;
+    @Mock
+    private MariadbJdbcTemplateRepository jdbcTemplateRepository;
 
-    private TypeValue.TypeValueBuilder firstRow;
-    private TypeValue.TypeValueBuilder secondRow;
+
+    @Test
+    public void shouldInvoke_jpaCount() {
+        databaseApiService.countDatabaseRows(apiFirstJpa);
+        verify(jpaRepository).count();
+    }
 
 
-    @Before
-    public void setUp() {
-        firstRow = TypeValue.builder()
-                .longId(1L)
-                .stringValue("first");
-
-        secondRow = TypeValue.builder()
-                .longId(1L)
-                .stringValue("second");
+    @Test
+    public void shouldInvoke_secondJpaCount() {
+        databaseApiService.countDatabaseRows(apiSecondJpa);
+        verify(secondJpaRepository).count();
     }
 
 
     @Test
     public void shouldInvoke_jpaFindAll() {
-        when(jpaRepository.findAll()).thenReturn(asList(
-                firstRow.databaseName(FIRST_JPA.name()).build(),
-                secondRow.databaseName(FIRST_JPA.name()).build()
-        ));
-
-        List<String> result = databaseApiService.getDatabaseRows(FIRST_JPA.name());
-
-        assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0)).contains("TypeValue(longId=1, databaseName=FIRST_JPA, stringValue=first");
-        assertThat(result.get(1)).contains("TypeValue(longId=1, databaseName=FIRST_JPA, stringValue=second");
+        databaseApiService.getDatabaseRows(apiFirstJpa);
         verify(jpaRepository).findAll();
     }
 
 
     @Test
     public void shouldInvoke_secondJpaFindAll() {
-        when(secondJpaRepository.findAll()).thenReturn(asList(
-                firstRow.databaseName(SECOND_JPA.name()).build(),
-                secondRow.databaseName(SECOND_JPA.name()).build()
-        ));
-
-        List<String> result = databaseApiService.getDatabaseRows(SECOND_JPA.name());
-
-        assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0)).contains("TypeValue(longId=1, databaseName=SECOND_JPA, stringValue=first");
-        assertThat(result.get(1)).contains("TypeValue(longId=1, databaseName=SECOND_JPA, stringValue=second");
+        databaseApiService.getDatabaseRows(apiSecondJpa);
         verify(secondJpaRepository).findAll();
     }
 
 
     @Test
     public void shouldInvoke_jpaFindById() {
-        when(jpaRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(FIRST_JPA.name()).build()));
+        when(jpaRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(apiFirstJpa).build()));
 
-        String result = databaseApiService.getDatabaseRow(1L, FIRST_JPA.name());
+        databaseApiService.getDatabaseRow(id, apiFirstJpa);
 
-        assertThat(result.toString()).contains("TypeValue(longId=1, databaseName=FIRST_JPA");
-        verify(jpaRepository).findById(1L);
+        verify(jpaRepository).findById(id);
     }
 
 
     @Test
     public void shouldInvoke_secondJpaFindById() {
-        when(secondJpaRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(SECOND_JPA.name()).build()));
+        when(secondJpaRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(apiSecondJpa).build()));
 
-        String result = databaseApiService.getDatabaseRow(1L, SECOND_JPA.name());
+        databaseApiService.getDatabaseRow(id, apiSecondJpa);
 
-        assertThat(result.toString()).contains("TypeValue(longId=1, databaseName=SECOND_JPA");
-        verify(secondJpaRepository).findById(1L);
+        verify(secondJpaRepository).findById(id);
+    }
+
+
+    @Test
+    public void shouldInvoke_jdbcCount() {
+        databaseApiService.countDatabaseRows(apiFirstJdbc);
+        verify(jdbcRepository).count();
+    }
+
+
+    @Test
+    public void shouldInvoke_jdbcTemplateCount() {
+        databaseApiService.countDatabaseRows(apiSecondJdbc);
+        verify(jdbcTemplateRepository).count();
     }
 
 
     @Test
     public void shouldInvoke_jdbcFindAll() {
-        when(jdbcRepository.findAll()).thenReturn(asList(
-                firstRow.databaseName(FIRST_JDBC.name()).build(),
-                secondRow.databaseName(FIRST_JDBC.name()).build()
-        ));
-
-        List<String> result = databaseApiService.getDatabaseRows(FIRST_JDBC.name());
-
-        assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0)).contains("TypeValue(longId=1, databaseName=FIRST_JDBC, stringValue=first");
-        assertThat(result.get(1)).contains("TypeValue(longId=1, databaseName=FIRST_JDBC, stringValue=second");
+        databaseApiService.getDatabaseRows(apiFirstJdbc);
         verify(jdbcRepository).findAll();
     }
 
 
     @Test
     public void shouldInvoke_jdbcFindById() {
-        when(jdbcRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(FIRST_JDBC.name()).build()));
+        when(jdbcRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(apiFirstJdbc).build()));
 
-        String result = databaseApiService.getDatabaseRow(1L, FIRST_JDBC.name());
+        databaseApiService.getDatabaseRow(id, apiFirstJdbc);
 
-        assertThat(result.toString()).contains("TypeValue(longId=1, databaseName=FIRST_JDBC");
-        verify(jdbcRepository).findById(1L);
+        verify(jdbcRepository).findById(id);
     }
 
 
     @Test
-    public void shouldReturn_errorMessage() {
-        List<String> result = databaseApiService.getDatabaseRows("");
+    public void shouldInvoke_jdbcTemplateFindAll() {
+        databaseApiService.getDatabaseRows(apiSecondJdbc);
+        verify(jdbcTemplateRepository).findAll();
+    }
 
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0)).contains("QueryPerformanceJpaApp not support shard: 'UNKNOWN'");
+
+    @Test
+    public void shouldInvoke_jdbcTemplateFindById() {
+        when(jdbcTemplateRepository.findById(anyLong())).thenReturn(of(firstRow.databaseName(apiSecondJdbc).build()));
+
+        databaseApiService.getDatabaseRow(id, apiSecondJdbc);
+
+        verify(jdbcTemplateRepository).findById(id);
+    }
+
+
+    @Test(expected = NotFoundException.class)
+    public void shouldThrow_NotFoundException() {
+        when(jpaRepository.findById(anyLong())).thenReturn(Optional.empty());
+        databaseApiService.getDatabaseRow(id, apiFirstJpa);
+
+        when(secondJpaRepository.findById(anyLong())).thenReturn(Optional.empty());
+        databaseApiService.getDatabaseRow(id, apiSecondJpa);
+
+        when(jdbcRepository.findById(anyLong())).thenReturn(Optional.empty());
+        databaseApiService.getDatabaseRow(id, apiFirstJdbc);
+
+        when(jdbcTemplateRepository.findById(anyLong())).thenReturn(Optional.empty());
+        databaseApiService.getDatabaseRow(id, apiSecondJdbc);
+    }
+
+
+    @Test(expected = InvalidApiTypeException.class)
+    public void shouldThrow_InvalidApiTypeException() {
+        databaseApiService.countDatabaseRows("");
+        databaseApiService.getDatabaseRows("");
+        databaseApiService.getDatabaseRow(id, "");
+
+        verify(jpaRepository, never()).count();
+        verify(secondJpaRepository, never()).count();
+        verify(jdbcRepository, never()).count();
+        verify(jdbcTemplateRepository, never()).count();
         verify(jpaRepository, never()).findAll();
+        verify(secondJpaRepository, never()).findAll();
+        verify(jdbcRepository, never()).findAll();
+        verify(jdbcTemplateRepository, never()).findAll();
+        verify(jpaRepository, never()).findById(anyLong());
+        verify(secondJpaRepository, never()).findById(anyLong());
+        verify(jdbcRepository, never()).findById(anyLong());
+        verify(jdbcTemplateRepository, never()).findById(anyLong());
     }
 
 }
