@@ -7,7 +7,8 @@ INSERT INTO type_value (
     local_date_value,
     local_time_value,
     local_date_time_value,
-    byte_value, short_value,
+    byte_value,
+    short_value,
     integer_value,
     big_decimal_value,
     boolean_value,
@@ -15,9 +16,24 @@ INSERT INTO type_value (
     blob_value
 )
 VALUES (
-    'MYSQL',
+    'MYSQL (Кириллица тест)',
     VERSION(),
     'A',
+ 	STR_TO_DATE('1990-01-31', '%Y-%m-%d'),
+    STR_TO_DATE('10:30:59', '%H:%i:%s'),
+    STR_TO_DATE('1990-01-31 10:30:59', '%Y-%m-%d %H:%i:%s'),
+    127,
+    32767,
+    2147483647,
+    99999999999999999.99,
+    1,
+    UUID_TO_BIN('1b6b2e07-78dc-43f5-9d94-bd77304a545c'),
+    LOAD_FILE('/var/lib/mysql/1.jpg')
+ ),
+ (
+    'MYSQL (Кириллица тест)',
+    VERSION(),
+    'C',
     CURRENT_DATE(),
     CURRENT_TIME(),
     CURRENT_TIMESTAMP(),
@@ -26,6 +42,6 @@ VALUES (
     1000,
     1234.56,
     1,
-    UUID(),
+    UUID_TO_BIN(UUID()),
     LOAD_FILE('/var/lib/mysql/1.jpg')
  );

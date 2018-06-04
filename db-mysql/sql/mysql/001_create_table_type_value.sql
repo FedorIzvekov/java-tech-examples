@@ -15,7 +15,7 @@ CREATE TABLE type_value (
     integer_value INT NOT NULL,
     big_decimal_value DECIMAL(19,2) NOT NULL,
     boolean_value BIT(1) NOT NULL,
-    uuid_value CHAR(36) NOT NULL,
+    uuid_value BINARY(16) NOT NULL,
     blob_value LONGBLOB,
     PRIMARY KEY (long_id),
     CHECK (boolean_value IN (0, 1))
