@@ -1,12 +1,11 @@
 package com.fedorizvekov.db.mysql.model.enums;
 
-import lombok.extern.log4j.Log4j2;
+import java.util.Arrays;
+import com.fedorizvekov.db.mysql.exception.InvalidApiTypeException;
 
-@Log4j2
 public enum ApiType {
 
-    JPA,
-    UNKNOWN;
+    JPA;
 
 
     public static ApiType fromName(String name) {
@@ -15,8 +14,7 @@ public enum ApiType {
             return ApiType.valueOf(name.toUpperCase());
 
         } catch (IllegalArgumentException exception) {
-            log.error("No ApiType enum constant '{}'", name);
-            return UNKNOWN;
+            throw new InvalidApiTypeException("Unsupported Api Type '" + name + "', supported: " + Arrays.toString(ApiType.values()));
         }
     }
 

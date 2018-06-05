@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import com.fedorizvekov.db.mysql.model.entity.TypeValue;
 import org.junit.Test;
@@ -67,12 +68,21 @@ public class MysqlJpaRepositoryTest {
 
 
     @Test
+    public void shouldNotFound_rowById() {
+        Optional<TypeValue> result = repository.findById(777L);
+
+        assertThat(result).isInstanceOfAny(Optional.class);
+        assertThat(result.isPresent()).isFalse();
+    }
+
+
+    @Test
     public void shouldFind_allRows() {
         List<TypeValue> result = repository.findAll();
 
         assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(1)).isInstanceOfAny(TypeValue.class);
-        assertThat(result.get(1).getDatabaseName()).isEqualTo("MYSQL (Кириллица тест)");
+        assertThat(result.get(0)).isInstanceOfAny(TypeValue.class);
+        assertThat(result.get(0).getDatabaseName()).isEqualTo("MYSQL (Кириллица тест)");
     }
 
 }
