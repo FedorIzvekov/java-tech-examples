@@ -1,5 +1,6 @@
 package com.fedorizvekov.db.mysql.service.impl;
 
+import static com.fedorizvekov.db.mysql.model.enums.ApiType.JDBC;
 import static com.fedorizvekov.db.mysql.model.enums.ApiType.JPA;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import com.fedorizvekov.db.mysql.exception.NotFoundException;
 import com.fedorizvekov.db.mysql.model.entity.TypeValue;
 import com.fedorizvekov.db.mysql.model.enums.ApiType;
+import com.fedorizvekov.db.mysql.repository.MysqlJdbcRepository;
 import com.fedorizvekov.db.mysql.repository.MysqlJpaRepository;
 import com.fedorizvekov.db.mysql.service.DatabaseApiService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class DatabaseApiServiceImpl implements DatabaseApiService {
 
     private final MysqlJpaRepository jpaRepository;
+    private final MysqlJdbcRepository jdbcRepository;
 
 
     public long countDatabaseRows(String databaseShard) {
@@ -28,7 +31,13 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
         long count = 0L;
 
         if (apiType == JPA) {
+
             count = jpaRepository.count();
+
+        } else if (apiType == JDBC) {
+
+            count = jdbcRepository.count();
+
         }
 
         return count;
@@ -42,7 +51,13 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
         Optional<TypeValue> typeValue = Optional.empty();
 
         if (apiType == JPA) {
+
             typeValue = jpaRepository.findById(id);
+
+        } else if (apiType == JDBC) {
+
+            typeValue = jdbcRepository.findById(id);
+
         }
 
         return typeValue
@@ -58,7 +73,13 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
         List<TypeValue> typeValues = emptyList();
 
         if (apiType == JPA) {
+
             typeValues = jpaRepository.findAll();
+
+        } else if (apiType == JDBC) {
+
+            typeValues = jdbcRepository.findAll();
+
         }
 
         return typeValues.stream().map(Objects::toString).collect(toList());

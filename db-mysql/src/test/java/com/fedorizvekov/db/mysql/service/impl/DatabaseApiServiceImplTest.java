@@ -1,5 +1,6 @@
 package com.fedorizvekov.db.mysql.service.impl;
 
+import static com.fedorizvekov.db.mysql.model.enums.ApiType.JDBC;
 import static com.fedorizvekov.db.mysql.model.enums.ApiType.JPA;
 import static java.util.Optional.of;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -11,6 +12,7 @@ import java.util.Optional;
 import com.fedorizvekov.db.mysql.exception.InvalidApiTypeException;
 import com.fedorizvekov.db.mysql.exception.NotFoundException;
 import com.fedorizvekov.db.mysql.model.entity.TypeValue;
+import com.fedorizvekov.db.mysql.repository.MysqlJdbcRepository;
 import com.fedorizvekov.db.mysql.repository.MysqlJpaRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +25,7 @@ public class DatabaseApiServiceImplTest {
 
     private final long id = 1L;
     private final String apiJpa = JPA.name();
+    private final String apiJdbc = JDBC.name();
     private final TypeValue firstRow = TypeValue.builder().longId(id).databaseName("MYSQL").build();
 
     @InjectMocks
@@ -30,12 +33,21 @@ public class DatabaseApiServiceImplTest {
 
     @Mock
     private MysqlJpaRepository jpaRepository;
+    @Mock
+    private MysqlJdbcRepository jdbcRepository;
 
 
     @Test
     public void shouldInvoke_jpaCount() {
         databaseApiService.countDatabaseRows(apiJpa);
         verify(jpaRepository).count();
+    }
+
+
+    @Test
+    public void shouldInvoke_jdbcCount() {
+        databaseApiService.countDatabaseRows(apiJdbc);
+        verify(jdbcRepository).count();
     }
 
 
@@ -50,9 +62,26 @@ public class DatabaseApiServiceImplTest {
 
 
     @Test
+    public void shouldInvoke_jdbcFindById() {
+        when(jdbcRepository.findById(anyLong())).thenReturn(of(firstRow));
+
+        databaseApiService.getDatabaseRow(id, apiJdbc);
+
+        verify(jdbcRepository).findById(id);
+    }
+
+
+    @Test
     public void shouldInvoke_jpaFindAll() {
         databaseApiService.getDatabaseRows(apiJpa);
         verify(jpaRepository).findAll();
+    }
+
+
+    @Test
+    public void shouldInvoke_jdbcFindAll() {
+        databaseApiService.getDatabaseRows(apiJdbc);
+        verify(jdbcRepository).findAll();
     }
 
 
@@ -60,6 +89,9 @@ public class DatabaseApiServiceImplTest {
     public void shouldThrow_NotFoundException() {
         when(jpaRepository.findById(anyLong())).thenReturn(Optional.empty());
         databaseApiService.getDatabaseRow(id, apiJpa);
+
+        when(jdbcRepository.findById(anyLong())).thenReturn(Optional.empty());
+        databaseApiService.getDatabaseRow(id, apiJdbc);
     }
 
 
@@ -72,6 +104,9 @@ public class DatabaseApiServiceImplTest {
         verify(jpaRepository, never()).count();
         verify(jpaRepository, never()).findById(anyLong());
         verify(jpaRepository, never()).findAll();
+        verify(jdbcRepository, never()).count();
+        verify(jdbcRepository, never()).findById(anyLong());
+        verify(jdbcRepository, never()).findAll();
     }
 
 }

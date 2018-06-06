@@ -37,10 +37,20 @@ java -jar ./target/db-mysql-1.0.0-SNAPSHOT.jar
 
 ## Checking
 
+### JPA
+
 ```
 curl -v http://localhost:8084/jpa/rows/count
 curl -v http://localhost:8084/jpa/row/1
 curl -v http://localhost:8084/jpa/rows
+```
+
+### JDBC
+
+```
+curl -v http://localhost:8084/jdbc/rows/count
+curl -v http://localhost:8084/jdbc/row/1
+curl -v http://localhost:8084/jdbc/rows
 ```
 
 ## Stopping
