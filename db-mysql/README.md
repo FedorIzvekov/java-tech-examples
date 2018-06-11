@@ -53,6 +53,14 @@ curl -v http://localhost:8084/jdbc/row/1
 curl -v http://localhost:8084/jdbc/rows
 ```
 
+### CRITERIA
+
+```
+curl -v http://localhost:8084/criteria/rows/count
+curl -v http://localhost:8084/criteria/row/1
+curl -v http://localhost:8084/criteria/rows
+```
+
 ## Stopping
 
 1. Shutdown the application:

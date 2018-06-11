@@ -1,5 +1,6 @@
 package com.fedorizvekov.db.mysql.service.impl;
 
+import static com.fedorizvekov.db.mysql.model.enums.ApiType.CRITERIA;
 import static com.fedorizvekov.db.mysql.model.enums.ApiType.JDBC;
 import static com.fedorizvekov.db.mysql.model.enums.ApiType.JPA;
 import static java.util.Optional.of;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import com.fedorizvekov.db.mysql.exception.InvalidApiTypeException;
 import com.fedorizvekov.db.mysql.exception.NotFoundException;
 import com.fedorizvekov.db.mysql.model.entity.TypeValue;
+import com.fedorizvekov.db.mysql.repository.MysqlCriteriaRepository;
 import com.fedorizvekov.db.mysql.repository.MysqlJdbcRepository;
 import com.fedorizvekov.db.mysql.repository.MysqlJpaRepository;
 import org.junit.Test;
@@ -26,6 +28,7 @@ public class DatabaseApiServiceImplTest {
     private final long id = 1L;
     private final String apiJpa = JPA.name();
     private final String apiJdbc = JDBC.name();
+    private final String apiCriteria = CRITERIA.name();
     private final TypeValue firstRow = TypeValue.builder().longId(id).databaseName("MYSQL").build();
 
     @InjectMocks
@@ -35,6 +38,8 @@ public class DatabaseApiServiceImplTest {
     private MysqlJpaRepository jpaRepository;
     @Mock
     private MysqlJdbcRepository jdbcRepository;
+    @Mock
+    private MysqlCriteriaRepository criteriaRepository;
 
 
     @Test
@@ -48,6 +53,13 @@ public class DatabaseApiServiceImplTest {
     public void shouldInvoke_jdbcCount() {
         databaseApiService.countDatabaseRows(apiJdbc);
         verify(jdbcRepository).count();
+    }
+
+
+    @Test
+    public void shouldInvoke_criteriaCount() {
+        databaseApiService.countDatabaseRows(apiCriteria);
+        verify(criteriaRepository).count();
     }
 
 
@@ -72,6 +84,16 @@ public class DatabaseApiServiceImplTest {
 
 
     @Test
+    public void shouldInvoke_criteriaFindById() {
+        when(criteriaRepository.findById(anyLong())).thenReturn(of(firstRow));
+
+        databaseApiService.getDatabaseRow(id, apiCriteria);
+
+        verify(criteriaRepository).findById(id);
+    }
+
+
+    @Test
     public void shouldInvoke_jpaFindAll() {
         databaseApiService.getDatabaseRows(apiJpa);
         verify(jpaRepository).findAll();
@@ -85,6 +107,13 @@ public class DatabaseApiServiceImplTest {
     }
 
 
+    @Test
+    public void shouldInvoke_criteriaFindAll() {
+        databaseApiService.getDatabaseRows(apiCriteria);
+        verify(criteriaRepository).findAll();
+    }
+
+
     @Test(expected = NotFoundException.class)
     public void shouldThrow_NotFoundException() {
         when(jpaRepository.findById(anyLong())).thenReturn(Optional.empty());
@@ -92,6 +121,9 @@ public class DatabaseApiServiceImplTest {
 
         when(jdbcRepository.findById(anyLong())).thenReturn(Optional.empty());
         databaseApiService.getDatabaseRow(id, apiJdbc);
+
+        when(criteriaRepository.findById(anyLong())).thenReturn(Optional.empty());
+        databaseApiService.getDatabaseRow(id, apiCriteria);
     }
 
 
@@ -107,6 +139,9 @@ public class DatabaseApiServiceImplTest {
         verify(jdbcRepository, never()).count();
         verify(jdbcRepository, never()).findById(anyLong());
         verify(jdbcRepository, never()).findAll();
+        verify(criteriaRepository, never()).count();
+        verify(criteriaRepository, never()).findById(anyLong());
+        verify(criteriaRepository, never()).findAll();
     }
 
 }
