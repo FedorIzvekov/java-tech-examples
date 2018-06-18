@@ -70,6 +70,7 @@ public class TypeValue {
     @Column(name = "boolean_value", nullable = false)
     private Boolean booleanValue;
 
+    @Type(type = "uuid-char")
     @Column(name = "uuid_value", nullable = false, columnDefinition = "uniqueidentifier")
     private UUID uuidValue;
 

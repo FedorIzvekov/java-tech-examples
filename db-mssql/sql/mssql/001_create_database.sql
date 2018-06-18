@@ -1,4 +1,4 @@
-CREATE DATABASE test_database;
+CREATE DATABASE test_database COLLATE Latin1_General_100_CI_AS_SC_UTF8;
 GO
 
 USE test_database;
