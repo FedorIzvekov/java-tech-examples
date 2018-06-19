@@ -1,8 +1,10 @@
 package com.fedorizvekov.db.mssql.controller;
 
+import static com.fedorizvekov.db.mssql.model.enums.ApiType.JPA;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fedorizvekov.db.mssql.service.DatabaseApiService;
@@ -18,31 +20,46 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(MssqlController.class)
 public class MssqlControllerTest {
 
+    public static final String COUNT_ENDPOINT = "/{api}/rows/count";
+    public static final String ROW_BY_ID_ENDPOINT = "/{api}/row/{id}";
+    public static final String ROWS_ENDPOINT = "/{api}/rows";
+    public static final long ID = 1L;
+
+    private final String api = JPA.name();
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private DatabaseApiService databaseApiService;
 
-    private long id = 1L;
-    private String api = "jpa";
+
+    @Test
+    public void shouldInvoke_countDatabaseRows() throws Exception {
+        mockMvc.perform(get(COUNT_ENDPOINT, api))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(databaseApiService).countDatabaseRows(eq(api));
+    }
 
 
     @Test
     public void shouldInvoke_getDatabaseRow() throws Exception {
-        mockMvc.perform(get("/" + api + "/row/" + id))
+        mockMvc.perform(get(ROW_BY_ID_ENDPOINT, api, ID))
+                .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(databaseApiService).getDatabaseRow(eq(1L), eq("jpa"));
+        verify(databaseApiService).getDatabaseRow(eq(ID), eq(api));
     }
 
 
     @Test
     public void shouldInvoke_getDatabaseRows() throws Exception {
-        mockMvc.perform(get("/" + api + "/rows"))
+        mockMvc.perform(get(ROWS_ENDPOINT, api))
+                .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(databaseApiService).getDatabaseRows(eq("jpa"));
+        verify(databaseApiService).getDatabaseRows(eq(api));
     }
-
 }

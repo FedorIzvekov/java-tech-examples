@@ -38,6 +38,7 @@ java -jar ./target/db-mssql-1.0.0-SNAPSHOT.jar
 ## Checking
 
 ```
+curl -v http://localhost:8083/jpa/rows/count
 curl -v http://localhost:8083/jpa/row/1
 curl -v http://localhost:8083/jpa/rows
 ```
