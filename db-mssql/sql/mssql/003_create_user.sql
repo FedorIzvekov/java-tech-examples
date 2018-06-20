@@ -15,3 +15,6 @@ GO
 
 ALTER ROLE db_datawriter ADD MEMBER test_user;
 GO
+
+ALTER USER test_user WITH DEFAULT_SCHEMA = test_schema;
+GO
