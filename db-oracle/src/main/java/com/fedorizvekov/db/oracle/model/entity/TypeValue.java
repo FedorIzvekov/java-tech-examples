@@ -3,7 +3,6 @@ package com.fedorizvekov.db.oracle.model.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;

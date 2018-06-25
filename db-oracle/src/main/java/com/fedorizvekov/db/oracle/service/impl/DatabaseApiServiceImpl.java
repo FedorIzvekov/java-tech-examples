@@ -6,6 +6,8 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import com.fedorizvekov.db.oracle.exception.NotFoundException;
 import com.fedorizvekov.db.oracle.model.entity.TypeValue;
 import com.fedorizvekov.db.oracle.model.enums.ApiType;
 import com.fedorizvekov.db.oracle.repository.OracleJpaRepository;
@@ -20,31 +22,44 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
     private final OracleJpaRepository jpaRepository;
 
 
+    public long countDatabaseRows(String databaseShard) {
+
+        ApiType apiType = ApiType.fromName(databaseShard);
+        long count = 0L;
+
+        if (apiType == JPA) {
+            count = jpaRepository.count();
+        }
+
+        return count;
+    }
+
+
     public String getDatabaseRow(long id, String api) {
 
         ApiType apiType = ApiType.fromName(api);
-        TypeValue typeValue = TypeValue.builder().build();
+        Optional<TypeValue> typeValue = Optional.empty();
 
         if (apiType == JPA) {
-            typeValue = jpaRepository.findById(id).get();
+            typeValue = jpaRepository.findById(id);
         }
 
-        return typeValue.toString();
-
+        return typeValue
+                .orElseThrow(() -> new NotFoundException("Not found TypeValue with id '" + id + "'"))
+                .toString();
     }
 
 
     public List<String> getDatabaseRows(String api) {
 
         ApiType apiType = ApiType.fromName(api);
-        List<TypeValue> list = emptyList();
+        List<TypeValue> typeValues = emptyList();
 
         if (apiType == JPA) {
-            list = jpaRepository.findAll();
+            typeValues = jpaRepository.findAll();
         }
 
-        return list.stream().map(Objects::toString).collect(toList());
-
+        return typeValues.stream().map(Objects::toString).collect(toList());
     }
 
 }

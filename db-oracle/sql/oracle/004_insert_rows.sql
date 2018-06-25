@@ -17,7 +17,22 @@ ALTER SESSION SET CURRENT_SCHEMA=TEST_USER;
      blob_value
  )
  VALUES (
-    'ORACLE',
+    'ORACLE (Кириллица тест)',
+    (SELECT BANNER FROM v$version),
+    'A',
+    TO_DATE('1990-01-31', 'YYYY-MM-DD'),
+    TO_TIMESTAMP('1990-01-31 10:30:59', 'YYYY-MM-DD HH24:MI:SS'),
+    TO_TIMESTAMP('1990-01-31 10:30:59', 'YYYY-MM-DD HH24:MI:SS'),
+    127,
+    32767,
+    2147483647,
+    99999999999999999.99,
+    1,
+    HEXTORAW(REPLACE('1b6b2e07-78dc-43f5-9d94-bd77304a545c', '-', '')),
+    EMPTY_BLOB()
+ ),
+ (
+    'ORACLE (Кириллица тест)',
     (SELECT BANNER FROM v$version),
     'A',
     CURRENT_DATE,
