@@ -13,7 +13,7 @@ CREATE TABLE type_value (
     byte_value Int8,
     short_value Int16,
     integer_value Int32,
-    big_decimal_value Decimal(18, 4),
+    big_decimal_value Decimal(22, 2),
     boolean_value UInt8,
     uuid_value UUID
 ) ENGINE = MergeTree()

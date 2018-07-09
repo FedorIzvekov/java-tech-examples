@@ -16,7 +16,22 @@ INSERT INTO type_value (
     uuid_value
 ) VALUES (
     1,
-    'CLICKHOUSE',
+    'CLICKHOUSE (Кириллица тест)',
+    VERSION(),
+    'A',
+    toDate('1990-01-31'),
+    toDateTime('2016-06-15 10:30:59'),
+    toDateTime('1990-01-31 10:30:59'),
+    127,
+    32767,
+    2147483647,
+    99999999999999999.99,
+    1,
+    '1b6b2e07-78dc-43f5-9d94-bd77304a545c',
+),
+(
+    2,
+    'CLICKHOUSE (Кириллица тест)',
     VERSION(),
     'A',
     CURRENT_DATE(),

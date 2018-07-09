@@ -1,5 +1,7 @@
 package com.fedorizvekov.db.clickhouse.model.entity;
 
+import static java.util.Objects.nonNull;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,8 +9,6 @@ import java.time.LocalTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "type_value")
@@ -30,7 +31,7 @@ public class TypeValue {
 
     @Id
     @Column(name = "long_id", nullable = false)
-    private Long longId;                        // ClickHouse not support SEQUENCE, IDENTITY and TABLE
+    private Long longId;                        // ClickHouse not support SEQUENCE and IDENTITY
 
     @Column(name = "database_name", nullable = false, length = 100)
     private String databaseName;
@@ -62,10 +63,10 @@ public class TypeValue {
     @Column(name = "big_decimal_value", nullable = false)
     private BigDecimal bigDecimalValue;
 
-    @Column(name = "boolean_value", nullable = false, columnDefinition = "int8")
+    @Column(name = "boolean_value", nullable = false, columnDefinition = "int8") // ClickHouse not support boolean value
     private Integer booleanValue;
 
-
+    @Type(type = "uuid-char")
     @Column(name = "uuid_value", nullable = false, columnDefinition = "UUID")
     private UUID uuidValue;
 
@@ -76,9 +77,12 @@ public class TypeValue {
         return booleanValue == 1;
     }
 
+    public boolean getBooleanValue() {
+       return nonNull(booleanValue) && booleanValue != 0;
+    }
 
-    public void setBooleanValue(boolean booleanValue) {
-        this.booleanValue = booleanValue ? 1 : 0;
+    public void setBooleanValue(boolean bool) {
+        booleanValue = bool ? 1 : 0;
     }
 
 }
