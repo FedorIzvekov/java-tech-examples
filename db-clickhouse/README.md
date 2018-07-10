@@ -37,7 +37,10 @@ java -jar ./target/db-clickhouse-1.0.0-SNAPSHOT.jar
 
 ## Checking
 
+### JPA
+
 ```
+curl -v http://localhost:8086/jpa/rows/count
 curl -v http://localhost:8086/jpa/row/1
 curl -v http://localhost:8086/jpa/rows
 ```
