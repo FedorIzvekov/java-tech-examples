@@ -5,7 +5,8 @@ import com.fedorizvekov.db.clickhouse.exception.InvalidApiTypeException;
 
 public enum ApiType {
 
-    JPA;
+    JPA,
+    JDBC;
 
 
     public static ApiType fromName(String name) {
