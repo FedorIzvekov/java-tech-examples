@@ -45,6 +45,14 @@ curl -v http://localhost:8082/jpa/row/1
 curl -v http://localhost:8082/jpa/rows
 ```
 
+### JDBC
+
+```
+curl -v http://localhost:8082/jdbc/rows/count
+curl -v http://localhost:8082/jdbc/row/1
+curl -v http://localhost:8082/jdbc/rows
+```
+
 ## Stopping
 
 1. Shutdown the application:
