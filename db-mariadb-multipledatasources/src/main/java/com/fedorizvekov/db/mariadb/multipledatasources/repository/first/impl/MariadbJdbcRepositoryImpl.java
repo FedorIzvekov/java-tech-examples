@@ -1,8 +1,5 @@
 package com.fedorizvekov.db.mariadb.multipledatasources.repository.first.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +36,9 @@ public class MariadbJdbcRepositoryImpl implements MariadbJdbcRepository {
 
     public long count() {
 
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_COUNT);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (var connection = dataSource.getConnection();
+             var preparedStatement = connection.prepareStatement(SQL_COUNT);
+             var resultSet = preparedStatement.executeQuery()) {
 
             if (resultSet.next()) {
                 return resultSet.getLong(1);
@@ -58,12 +55,12 @@ public class MariadbJdbcRepositoryImpl implements MariadbJdbcRepository {
 
     public Optional<TypeValue> findById(Long id) {
 
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_BY_ID)) {
+        try (var connection = dataSource.getConnection();
+             var preparedStatement = connection.prepareStatement(SQL_FIND_BY_ID)) {
 
             preparedStatement.setLong(1, id);
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
 
                 if (resultSet.next()) {
                     return Optional.of(resultSetMapper.mapToTypeValue(resultSet));
@@ -84,9 +81,9 @@ public class MariadbJdbcRepositoryImpl implements MariadbJdbcRepository {
 
         List<TypeValue> typeValues = new ArrayList<>();
 
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (var connection = dataSource.getConnection();
+             var preparedStatement = connection.prepareStatement(SQL_FIND_ALL);
+             var resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 typeValues.add(resultSetMapper.mapToTypeValue(resultSet));

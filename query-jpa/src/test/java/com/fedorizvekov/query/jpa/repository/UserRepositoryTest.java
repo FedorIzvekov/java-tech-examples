@@ -61,7 +61,7 @@ public class UserRepositoryTest {
                 .gender(Gender.FEMALE)
                 .build();
 
-        User result = userRepository.saveAndFlush(user);
+        var result = userRepository.saveAndFlush(user);
 
         assertThat(result.getUserId()).isGreaterThan(0);
         assertThat(result.getFirstName()).isEqualTo("test_name");
@@ -74,7 +74,7 @@ public class UserRepositoryTest {
 
     @Test
     public void should_save_user() {
-        User result = userRepository.save(user);
+        var result = userRepository.save(user);
 
         assertThat(result.getUserId()).isGreaterThan(0);
         assertThat(result.getFirstName()).isEqualTo("test_name");
@@ -92,7 +92,7 @@ public class UserRepositoryTest {
     public void should_save_user_with_contact() {
         user.addContact(contact);
 
-        User result = userRepository.saveAndFlush(user);
+        var result = userRepository.saveAndFlush(user);
 
         assertThat(result.getContacts()).hasSize(1);
         assertThat(result.getContacts().get(0).getContactId()).isGreaterThan(0);
@@ -107,16 +107,16 @@ public class UserRepositoryTest {
     public void should_update_contact() {
         user.addContact(contact);
 
-        User savedUser = entityManager.persist(user);
-        Contact savedContact = savedUser.getContacts().get(0);
+        var savedUser = entityManager.persist(user);
+        var savedContact = savedUser.getContacts().get(0);
 
         savedContact.setType(PHONE);
         savedContact.setValue("0000000000");
 
-        User resultUser = userRepository.saveAndFlush(user);
+        var resultUser = userRepository.saveAndFlush(user);
         assertThat(resultUser.getContacts()).hasSize(1);
 
-        Contact resultContacts = savedUser.getContacts().get(0);
+        var resultContacts = savedUser.getContacts().get(0);
         assertThat(resultContacts.getContactId()).isEqualTo(savedContact.getContactId());
         assertThat(resultContacts.getType()).isEqualTo(PHONE);
         assertThat(resultContacts.getValue()).isEqualTo("0000000000");
@@ -128,15 +128,15 @@ public class UserRepositoryTest {
     @Test
     public void should_delete_contact() {
         user.addContact(contact);
-        User savedUser = entityManager.persist(user);
-        Contact savedContact = savedUser.getContacts().get(0);
+        var savedUser = entityManager.persist(user);
+        var savedContact = savedUser.getContacts().get(0);
 
         savedUser.removeContact(savedContact);
 
-        User resultUser = userRepository.saveAndFlush(savedUser);
+        var resultUser = userRepository.saveAndFlush(savedUser);
         assertThat(resultUser.getContacts()).hasSize(0);
 
-        Contact resultContacts = entityManager.find(Contact.class, savedContact.getContactId());
+        var resultContacts = entityManager.find(Contact.class, savedContact.getContactId());
         assertThat(resultContacts).isNull();
     }
 

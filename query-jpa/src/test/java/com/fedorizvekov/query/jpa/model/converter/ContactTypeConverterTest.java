@@ -5,7 +5,6 @@ import static com.fedorizvekov.query.jpa.model.enums.ContactType.PHONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fedorizvekov.query.jpa.model.enums.ContactType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,28 +19,28 @@ public class ContactTypeConverterTest {
 
     @Test
     public void should_return_0() {
-        byte result = converter.convertToDatabaseColumn(EMAIL);
+        var result = converter.convertToDatabaseColumn(EMAIL);
         assertThat(result).isEqualTo((byte) 0);
     }
 
 
     @Test
     public void should_return_1() {
-        byte result = converter.convertToDatabaseColumn(PHONE);
+        var result = converter.convertToDatabaseColumn(PHONE);
         assertThat(result).isEqualTo((byte) 1);
     }
 
 
     @Test
     public void should_return_EMAIL() {
-        ContactType result = converter.convertToEntityAttribute((byte) 0);
+        var result = converter.convertToEntityAttribute((byte) 0);
         assertThat(result).isEqualTo(EMAIL);
     }
 
 
     @Test
     public void should_return_PHONE() {
-        ContactType result = converter.convertToEntityAttribute((byte) 1);
+        var result = converter.convertToEntityAttribute((byte) 1);
         assertThat(result).isEqualTo(PHONE);
     }
 

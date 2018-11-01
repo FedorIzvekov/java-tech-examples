@@ -3,7 +3,6 @@ package com.fedorizvekov.db.mariadb.multipledatasources.repository.second;
 import static com.fedorizvekov.db.mariadb.multipledatasources.repository.first.MariadbJdbcRepositoryTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
 import java.util.Optional;
 import com.fedorizvekov.db.mariadb.multipledatasources.config.MariadbConfig;
 import com.fedorizvekov.db.mariadb.multipledatasources.config.SecondMariadbConfig;
@@ -32,7 +31,7 @@ public class MariadbJdbcTemplateRepositoryTest {
 
     @Test
     public void shouldCount_rows() {
-        long result = repository.count();
+        var result = repository.count();
 
         assertThat(result).isEqualTo(2);
     }
@@ -40,7 +39,7 @@ public class MariadbJdbcTemplateRepositoryTest {
 
     @Test
     public void shouldFind_rowById() {
-        TypeValue result = repository.findById(1L).get();
+        var result = repository.findById(1L).get();
 
         assertThat(result).isInstanceOfAny(TypeValue.class);
         assertThat(result.getDatabaseName()).isEqualTo("MARIADB second shard (Кириллица тест)");
@@ -59,7 +58,7 @@ public class MariadbJdbcTemplateRepositoryTest {
 
     @Test
     public void shouldNotFound_rowById() {
-        Optional<TypeValue> result = repository.findById(777L);
+        var result = repository.findById(777L);
 
         assertThat(result).isInstanceOfAny(Optional.class);
         assertThat(result.isPresent()).isFalse();
@@ -68,7 +67,7 @@ public class MariadbJdbcTemplateRepositoryTest {
 
     @Test
     public void shouldFind_allRows() {
-        List<TypeValue> result = repository.findAll();
+        var result = repository.findAll();
 
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(1)).isInstanceOfAny(TypeValue.class);

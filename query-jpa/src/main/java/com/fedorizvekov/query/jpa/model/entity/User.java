@@ -59,13 +59,13 @@ public class User {
 
     public void addContact(Contact contact) {
         contact.setUser(this);
-        this.contacts.add(contact);
+        contacts.add(contact);
     }
 
 
     public void removeContact(Contact contact) {
         contact.setUser(null);
-        this.contacts.remove(contact);
+        contacts.remove(contact);
     }
 
 }

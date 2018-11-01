@@ -24,9 +24,8 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
 
 
     public long countDatabaseRows(String databaseShard) {
-
-        ApiType apiType = ApiType.fromName(databaseShard);
-        long count = 0L;
+        var apiType = ApiType.fromName(databaseShard);
+        var count = 0L;
 
         switch (apiType) {
             case JPA:
@@ -42,8 +41,7 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
 
 
     public String getDatabaseRow(long id, String api) {
-
-        ApiType apiType = ApiType.fromName(api);
+        var apiType = ApiType.fromName(api);
         Optional<TypeValue> typeValue = Optional.empty();
 
         switch (apiType) {
@@ -62,8 +60,7 @@ public class DatabaseApiServiceImpl implements DatabaseApiService {
 
 
     public List<String> getDatabaseRows(String api) {
-
-        ApiType apiType = ApiType.fromName(api);
+        var apiType = ApiType.fromName(api);
         List<TypeValue> typeValues = emptyList();
 
         switch (apiType) {

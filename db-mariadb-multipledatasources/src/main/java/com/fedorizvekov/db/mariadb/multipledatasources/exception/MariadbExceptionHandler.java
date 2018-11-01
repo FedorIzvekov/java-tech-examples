@@ -57,7 +57,7 @@ public class MariadbExceptionHandler {
 
 
     private String logAndCreateErrorMessage(String exceptionType, String message) {
-        String errorMessage = "RESPONSE ERROR, because: " + exceptionType + ": " + message;
+        var errorMessage = "RESPONSE ERROR, because: " + exceptionType + ": " + message;
         log.error(errorMessage);
         return errorMessage;
     }

@@ -52,16 +52,13 @@ public class MariadbConfig {
     @Primary
     @Bean("mariadbEntityManager")
     public LocalContainerEntityManagerFactoryBean mariadbEntityManager(@Qualifier("mariadbDataSource") DataSource dataSource) {
-
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-
-        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+        var vendorAdapter = new HibernateJpaVendorAdapter();
+        var entityManager = new LocalContainerEntityManagerFactoryBean();
         entityManager.setDataSource(dataSource);
         entityManager.setPackagesToScan("com.fedorizvekov.db.mariadb.multipledatasources.model.entity");
         entityManager.setJpaVendorAdapter(vendorAdapter);
         entityManager.setJpaProperties(hibernateProperties());
         return entityManager;
-
     }
 
 

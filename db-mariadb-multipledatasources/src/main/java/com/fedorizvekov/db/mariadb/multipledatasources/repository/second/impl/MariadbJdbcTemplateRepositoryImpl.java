@@ -35,7 +35,7 @@ public class MariadbJdbcTemplateRepositoryImpl implements MariadbJdbcTemplateRep
 
     public Optional<TypeValue> findById(Long id) {
 
-        List<TypeValue> typeValues = jdbcTemplate.query(SQL_FIND_BY_ID, singletonMap("id", id), rowMapper);
+        var typeValues = jdbcTemplate.query(SQL_FIND_BY_ID, singletonMap("id", id), rowMapper);
 
         return typeValues.isEmpty() ? empty() : of(typeValues.get(0));
 

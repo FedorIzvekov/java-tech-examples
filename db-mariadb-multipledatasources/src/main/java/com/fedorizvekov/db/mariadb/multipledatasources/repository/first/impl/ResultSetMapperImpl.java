@@ -33,9 +33,9 @@ public class ResultSetMapperImpl implements ResultSetMapper {
 
 
     private UUID binaryToUUID(byte[] binary) {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(binary);
-        long mostSigBits = byteBuffer.getLong();
-        long leastSigBits = byteBuffer.getLong();
+        var byteBuffer = ByteBuffer.wrap(binary);
+        var mostSigBits = byteBuffer.getLong();
+        var leastSigBits = byteBuffer.getLong();
         return new UUID(mostSigBits, leastSigBits);
     }
 

@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import com.fedorizvekov.db.oracle.model.entity.TypeValue;
@@ -42,7 +41,7 @@ public class OracleJpaRepositoryTest {
 
     @Test
     public void shouldCount_rows() {
-        long result = repository.count();
+        var result = repository.count();
 
         assertThat(result).isEqualTo(2);
     }
@@ -50,7 +49,7 @@ public class OracleJpaRepositoryTest {
 
     @Test
     public void shouldFind_rowById() {
-        TypeValue result = repository.findById(1L).get();
+        var result = repository.findById(1L).get();
 
         assertThat(result).isInstanceOfAny(TypeValue.class);
         assertThat(result.getDatabaseName()).isEqualTo("ORACLE (Кириллица тест)");
@@ -69,7 +68,7 @@ public class OracleJpaRepositoryTest {
 
     @Test
     public void shouldNotFound_rowById() {
-        Optional<TypeValue> result = repository.findById(777L);
+        var result = repository.findById(777L);
 
         assertThat(result).isInstanceOfAny(Optional.class);
         assertThat(result.isPresent()).isFalse();
@@ -78,7 +77,7 @@ public class OracleJpaRepositoryTest {
 
     @Test
     public void shouldFind_allRows() {
-        List<TypeValue> result = repository.findAll();
+        var result = repository.findAll();
 
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0)).isInstanceOfAny(TypeValue.class);

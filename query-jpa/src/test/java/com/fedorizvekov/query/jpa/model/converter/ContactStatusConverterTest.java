@@ -6,7 +6,6 @@ import static com.fedorizvekov.query.jpa.model.enums.ContactStatus.REPLACED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fedorizvekov.query.jpa.model.enums.ContactStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,42 +20,42 @@ public class ContactStatusConverterTest {
 
     @Test
     public void should_return_0() {
-        byte result = converter.convertToDatabaseColumn(CONFIRMED);
+        var result = converter.convertToDatabaseColumn(CONFIRMED);
         assertThat(result).isEqualTo((byte) 0);
     }
 
 
     @Test
     public void should_return_1() {
-        byte result = converter.convertToDatabaseColumn(NOT_CONFIRMED);
+        var result = converter.convertToDatabaseColumn(NOT_CONFIRMED);
         assertThat(result).isEqualTo((byte) 1);
     }
 
 
     @Test
     public void should_return_2() {
-        byte result = converter.convertToDatabaseColumn(REPLACED);
+        var result = converter.convertToDatabaseColumn(REPLACED);
         assertThat(result).isEqualTo((byte) 2);
     }
 
 
     @Test
     public void should_return_CONFIRMED() {
-        ContactStatus result = converter.convertToEntityAttribute((byte) 0);
+        var result = converter.convertToEntityAttribute((byte) 0);
         assertThat(result).isEqualTo(CONFIRMED);
     }
 
 
     @Test
     public void should_return_NOT_CONFIRMED() {
-        ContactStatus result = converter.convertToEntityAttribute((byte) 1);
+        var result = converter.convertToEntityAttribute((byte) 1);
         assertThat(result).isEqualTo(NOT_CONFIRMED);
     }
 
 
     @Test
     public void should_return_REPLACED() {
-        ContactStatus result = converter.convertToEntityAttribute((byte) 2);
+        var result = converter.convertToEntityAttribute((byte) 2);
         assertThat(result).isEqualTo(REPLACED);
     }
 

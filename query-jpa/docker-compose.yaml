@@ -14,7 +14,7 @@ services:
       MYSQL_USER: test_user
       MYSQL_PASSWORD: test_User_123
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
       - ../../../data/mariadb:/var/lib/mysql
       - ./sql/001_create_table_user.sql:/docker-entrypoint-initdb.d/001_create_table_user.sql

@@ -2,6 +2,8 @@ package com.fedorizvekov.db.oracle.repository.impl;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,13 +35,9 @@ public class OracleJdbcRepositoryImpl implements OracleJdbcRepository {
 
     public Optional<TypeValue> findById(Long id) {
 
-        List<TypeValue> typeValues = jdbcTemplate.query(SQL_FIND_BY_ID, singletonMap("id", id), rowMapper);
+        var typeValues = jdbcTemplate.query(SQL_FIND_BY_ID, singletonMap("id", id), rowMapper);
 
-        if (typeValues.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(typeValues.get(0));
+        return typeValues.isEmpty() ? empty() : of(typeValues.get(0));
 
     }
 

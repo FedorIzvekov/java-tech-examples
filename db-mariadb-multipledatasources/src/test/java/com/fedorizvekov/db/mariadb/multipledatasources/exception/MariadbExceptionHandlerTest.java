@@ -14,11 +14,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import javax.persistence.PersistenceException;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.enums.ApiType;
 import com.fedorizvekov.db.mariadb.multipledatasources.service.DatabaseApiService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.stubbing.Stubber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -40,8 +40,8 @@ public class MariadbExceptionHandlerTest {
 
     @Test
     public void shouldHandle_InvalidApiTypeException() throws Exception {
-        String exceptionMsg = "RESPONSE ERROR, because: InvalidApiTypeException: Unsupported Api Type 'test', supported: " + Arrays.toString(ApiType.values());
-        Stubber doThrow = doThrow(new InvalidApiTypeException("Unsupported Api Type 'test', supported: " + Arrays.toString(ApiType.values())));
+        var exceptionMsg = "RESPONSE ERROR, because: InvalidApiTypeException: Unsupported Api Type 'test', supported: " + Arrays.toString(ApiType.values());
+        var doThrow = doThrow(new InvalidApiTypeException("Unsupported Api Type 'test', supported: " + Arrays.toString(ApiType.values())));
 
         doThrow.when(databaseApiService).countDatabaseRows(anyString());
         mockMvc.perform(get(COUNT_ENDPOINT, api))
@@ -68,7 +68,7 @@ public class MariadbExceptionHandlerTest {
 
     @Test
     public void shouldHandle_NotFoundException() throws Exception {
-        String exceptionMsg = "RESPONSE ERROR, because: NotFoundException: Not found TypeValue with id '1'";
+        var exceptionMsg = "RESPONSE ERROR, because: NotFoundException: Not found TypeValue with id '1'";
         when(databaseApiService.getDatabaseRow(anyLong(), anyString())).thenThrow(new NotFoundException("Not found TypeValue with id '1'"));
 
         mockMvc.perform(get(ROW_BY_ID_ENDPOINT, api, ID))
@@ -80,9 +80,9 @@ public class MariadbExceptionHandlerTest {
 
 
     @Test
-    public void shouldHandle_DataBaseException() throws Exception {
-        String exceptionMsg = "RESPONSE ERROR, because: DataBaseException: Database error";
-        Stubber doThrow = doThrow(new DataBaseException("Database error"));
+    public void shouldHandle_PersistenceException() throws Exception {
+        var exceptionMsg = "RESPONSE ERROR, because: DataBaseException: Database error";
+        var doThrow = doThrow(new PersistenceException("Database error"));
 
         doThrow.when(databaseApiService).countDatabaseRows(anyString());
         mockMvc.perform(get(COUNT_ENDPOINT, api))
@@ -109,8 +109,8 @@ public class MariadbExceptionHandlerTest {
 
     @Test
     public void shouldHandle_OtherException() throws Exception {
-        String exceptionMsg = "RESPONSE ERROR, because: Exception: Something went wrong, because: Other error";
-        Stubber doThrow = doThrow(new RuntimeException("Other error"));
+        var exceptionMsg = "RESPONSE ERROR, because: Exception: Something went wrong, because: Other error";
+        var doThrow = doThrow(new RuntimeException("Other error"));
 
         doThrow.when(databaseApiService).countDatabaseRows(anyString());
         mockMvc.perform(get(COUNT_ENDPOINT, api))

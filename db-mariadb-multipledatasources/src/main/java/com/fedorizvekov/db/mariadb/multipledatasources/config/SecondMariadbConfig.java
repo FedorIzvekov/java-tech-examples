@@ -55,10 +55,8 @@ public class SecondMariadbConfig {
 
     @Bean("secondMariadbEntityManager")
     public LocalContainerEntityManagerFactoryBean mariadbEntityManager(@Qualifier("secondMariadbDataSource") DataSource dataSource) {
-
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-
-        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+        var vendorAdapter = new HibernateJpaVendorAdapter();
+        var entityManager = new LocalContainerEntityManagerFactoryBean();
         entityManager.setDataSource(dataSource);
         entityManager.setPackagesToScan("com.fedorizvekov.db.mariadb.multipledatasources.model.entity");
         entityManager.setJpaVendorAdapter(vendorAdapter);
