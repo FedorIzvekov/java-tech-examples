@@ -7,16 +7,16 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Gender {
 
-    NOT_DEFINED((byte) 0),
-    MALE((byte) 1),
-    FEMALE((byte) 2);
+    NOT_DEFINED((short) 0),
+    MALE((short) 1),
+    FEMALE((short) 2);
 
 
     @Getter
-    private final byte value;
+    private final short value;
 
 
-    public static Gender fromValue(byte value) {
+    public static Gender fromValue(short value) {
         return Stream.of(Gender.values())
                 .filter(type -> type.getValue() == value)
                 .findFirst()

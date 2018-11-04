@@ -6,63 +6,55 @@ import static com.fedorizvekov.query.jpa.model.enums.Gender.NOT_DEFINED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import java.util.stream.Stream;
+import com.fedorizvekov.query.jpa.model.enums.Gender;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class GenderConverterTest {
+@ExtendWith(MockitoExtension.class)
+class GenderConverterTest {
 
     @InjectMocks
     private GenderConverter converter;
 
 
-    @Test
-    public void should_return_0() {
-        var result = converter.convertToDatabaseColumn(NOT_DEFINED);
-        assertThat(result).isEqualTo((byte) 0);
+    private static Stream<Arguments> provideConvert() {
+        return Stream.of(
+                Arguments.of((short) 0, NOT_DEFINED),
+                Arguments.of((short) 1, MALE),
+                Arguments.of((short) 2, FEMALE)
+        );
     }
 
 
-    @Test
-    public void should_return_1() {
-        var result = converter.convertToDatabaseColumn(MALE);
-        assertThat(result).isEqualTo((byte) 1);
+    @DisplayName("Should convert Gender to number")
+    @MethodSource("provideConvert")
+    @ParameterizedTest
+    void shouldConvert_gender_toNumber(short number, Gender gender) {
+        var result = converter.convertToDatabaseColumn(gender);
+        assertThat(result).isEqualTo(number);
     }
 
 
-    @Test
-    public void should_return_2() {
-        var result = converter.convertToDatabaseColumn(FEMALE);
-        assertThat(result).isEqualTo((byte) 2);
+    @DisplayName("Should convert number to Gender")
+    @MethodSource("provideConvert")
+    @ParameterizedTest
+    void shouldConvert_number_to_gender(short number, Gender gender) {
+        var result = converter.convertToEntityAttribute(number);
+        assertThat(result).isEqualTo(gender);
     }
 
 
+    @DisplayName("Should thrown IllegalArgumentException")
     @Test
-    public void should_return_NOT_DEFINED() {
-        var result = converter.convertToEntityAttribute((byte) 0);
-        assertThat(result).isEqualTo(NOT_DEFINED);
-    }
-
-
-    @Test
-    public void should_return_MALE() {
-        var result = converter.convertToEntityAttribute((byte) 1);
-        assertThat(result).isEqualTo(MALE);
-    }
-
-
-    @Test
-    public void should_return_FEMALE() {
-        var result = converter.convertToEntityAttribute((byte) 2);
-        assertThat(result).isEqualTo(FEMALE);
-    }
-
-
-    @Test
-    public void should_thrown_IllegalArgumentException() {
-        assertThatThrownBy(() -> converter.convertToEntityAttribute((byte) 3))
+    void should_thrown_IllegalArgumentException() {
+        assertThatThrownBy(() -> converter.convertToEntityAttribute((short) 3))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Invalid Gender value: '3', need: 0 = NOT_DEFINED, 1 = MALE, 2 = FEMALE");
     }

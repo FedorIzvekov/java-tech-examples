@@ -5,16 +5,16 @@ import javax.persistence.Converter;
 import com.fedorizvekov.query.jpa.model.enums.ContactStatus;
 
 @Converter(autoApply = true)
-public class ContactStatusConverter implements AttributeConverter<ContactStatus, Byte> {
+public class ContactStatusConverter implements AttributeConverter<ContactStatus, Short> {
 
     @Override
-    public Byte convertToDatabaseColumn(ContactStatus contactStatus) {
+    public Short convertToDatabaseColumn(ContactStatus contactStatus) {
         return contactStatus.getValue();
     }
 
 
     @Override
-    public ContactStatus convertToEntityAttribute(Byte statusValue) {
+    public ContactStatus convertToEntityAttribute(Short statusValue) {
         return ContactStatus.fromValue(statusValue);
     }
 

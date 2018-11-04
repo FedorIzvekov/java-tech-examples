@@ -5,49 +5,54 @@ import static com.fedorizvekov.query.jpa.model.enums.ContactType.PHONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import java.util.stream.Stream;
+import com.fedorizvekov.query.jpa.model.enums.ContactType;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ContactTypeConverterTest {
+@ExtendWith(MockitoExtension.class)
+class ContactTypeConverterTest {
 
     @InjectMocks
     private ContactTypeConverter converter;
 
 
-    @Test
-    public void should_return_0() {
-        var result = converter.convertToDatabaseColumn(EMAIL);
-        assertThat(result).isEqualTo((byte) 0);
+    private static Stream<Arguments> provideConvert() {
+        return Stream.of(
+                Arguments.of((short) 0, EMAIL),
+                Arguments.of((short) 1, PHONE)
+        );
     }
 
 
-    @Test
-    public void should_return_1() {
-        var result = converter.convertToDatabaseColumn(PHONE);
-        assertThat(result).isEqualTo((byte) 1);
+    @DisplayName("Should convert ContactType to number")
+    @MethodSource("provideConvert")
+    @ParameterizedTest
+    void shouldConvert_contactType_toNumber(short number, ContactType contactType) {
+        var result = converter.convertToDatabaseColumn(contactType);
+        assertThat(result).isEqualTo(number);
     }
 
 
-    @Test
-    public void should_return_EMAIL() {
-        var result = converter.convertToEntityAttribute((byte) 0);
-        assertThat(result).isEqualTo(EMAIL);
+    @DisplayName("Should convert number to ContactType")
+    @MethodSource("provideConvert")
+    @ParameterizedTest
+    void shouldConvert_number_toContactType(short number, ContactType contactType) {
+        var result = converter.convertToEntityAttribute(number);
+        assertThat(result).isEqualTo(contactType);
     }
 
 
+    @DisplayName("Should thrown IllegalArgumentException")
     @Test
-    public void should_return_PHONE() {
-        var result = converter.convertToEntityAttribute((byte) 1);
-        assertThat(result).isEqualTo(PHONE);
-    }
-
-
-    @Test
-    public void should_thrown_IllegalArgumentException() {
-        assertThatThrownBy(() -> converter.convertToEntityAttribute((byte) 2))
+    void should_thrown_IllegalArgumentException() {
+        assertThatThrownBy(() -> converter.convertToEntityAttribute((short) 2))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Invalid ContactType value: '2', need: 0 = EMAIL, 1 = PHONE");
     }

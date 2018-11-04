@@ -11,19 +11,19 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ContactType {
 
-    EMAIL((byte) 0),
-    PHONE((byte) 1);
+    EMAIL((short) 0),
+    PHONE((short) 1);
 
 
-    private static final Map<Byte, ContactType> types = Arrays.stream(ContactType.values())
+    private static final Map<Short, ContactType> types = Arrays.stream(ContactType.values())
             .collect(Collectors.toMap(ContactType::getValue, Function.identity()));
 
 
     @Getter
-    private final byte value;
+    private final short value;
 
 
-    public static ContactType fromValue(byte value) {
+    public static ContactType fromValue(short value) {
         return Optional.of(value)
                 .map(types::get)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid ContactType value: '" + value + "', need: 0 = EMAIL, 1 = PHONE"));

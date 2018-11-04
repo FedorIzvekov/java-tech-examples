@@ -11,20 +11,20 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ContactStatus {
 
-    CONFIRMED((byte) 0),
-    NOT_CONFIRMED((byte) 1),
-    REPLACED((byte) 2);
+    CONFIRMED((short) 0),
+    NOT_CONFIRMED((short) 1),
+    REPLACED((short) 2);
 
 
-    private static final Map<Byte, ContactStatus> statuses = Arrays.stream(ContactStatus.values())
+    private static final Map<Short, ContactStatus> statuses = Arrays.stream(ContactStatus.values())
             .collect(Collectors.toMap(ContactStatus::getValue, Function.identity()));
 
 
     @Getter
-    private final byte value;
+    private final short value;
 
 
-    public static ContactStatus fromValue(byte value) {
+    public static ContactStatus fromValue(short value) {
         return Optional.of(value)
                 .map(statuses::get)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid CredentialStatus value: '" + value + "', need: 0 = CONFIRMED, 1 = NOT_CONFIRMED, 2 = REPLACED"));
