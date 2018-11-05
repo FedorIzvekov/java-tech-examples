@@ -1,5 +1,10 @@
 package com.fedorizvekov.query.jpa.model.entity;
 
+import static java.util.Objects.hash;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -51,5 +56,31 @@ public class Contact {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (this == object) return true;
+        if (isNull(object) || this.getClass() != object.getClass()) return false;
+
+        var contact = (Contact) object;
+
+        if (nonNull(this.contactId) && nonNull(contact.contactId)) {
+            return Objects.equals(this.contactId, contact.contactId);
+        }
+
+        return Objects.equals(this.value, contact.value);
+    }
+
+
+    @Override
+    public int hashCode() {
+        if (nonNull(this.contactId)) {
+            return hash(this.contactId);
+        }
+
+        return hash(this.value);
+    }
 
 }

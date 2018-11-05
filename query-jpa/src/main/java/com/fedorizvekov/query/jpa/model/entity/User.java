@@ -1,8 +1,13 @@
 package com.fedorizvekov.query.jpa.model.entity;
 
+import static java.util.Objects.hash;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -66,6 +71,36 @@ public class User {
     public void removeContact(Contact contact) {
         contact.setUser(null);
         contacts.remove(contact);
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (this == object) return true;
+        if (isNull(object) || this.getClass() != object.getClass()) return false;
+
+        var user = (User) object;
+
+        if (nonNull(this.userId) && nonNull(user.userId)) {
+            return Objects.equals(this.userId, user.userId);
+        }
+
+        return Objects.equals(this.firstName, user.firstName)
+                && Objects.equals(this.lastName, user.lastName)
+                && Objects.equals(this.middleName, user.middleName)
+                && Objects.equals(this.birthdate, user.birthdate)
+                && this.gender == user.gender;
+    }
+
+
+    @Override
+    public int hashCode() {
+        if (nonNull(this.userId)) {
+            return hash(this.userId);
+        }
+
+        return hash(firstName, lastName, middleName, birthdate, gender);
     }
 
 }
