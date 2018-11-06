@@ -1,5 +1,6 @@
 package com.fedorizvekov.query.jpa.model.entity;
 
+import static com.fedorizvekov.query.jpa.model.enums.Gender.NOT_DEFINED;
 import static java.util.Objects.hash;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -23,12 +24,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "user")
 @Builder
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -50,16 +53,27 @@ public class User {
     @Column(name = "birthdate")
     private LocalDate birthdate;
 
-    @Column(name = "gender", nullable = false, columnDefinition = "TINYINT")
-    private Gender gender;
-
-    @Embedded
     @Builder.Default
+    @Column(name = "gender", nullable = false, columnDefinition = "TINYINT")
+    private Gender gender = NOT_DEFINED;
+
+    @Builder.Default
+    @Embedded
     private Timestamps timestamps = new Timestamps();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contact> contacts = new ArrayList<>();
+
+
+    public void setContacts(List<Contact> contactsList){
+
+        contacts.clear();
+
+        for(var contact : contactsList) {
+            this.addContact(contact);
+        }
+    }
 
 
     public void addContact(Contact contact) {

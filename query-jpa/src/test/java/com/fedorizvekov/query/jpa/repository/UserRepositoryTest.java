@@ -20,7 +20,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class UserRepositoryTest {
+class UserRepositoryTest {
 
     private final Long id = 1L;
     private final String firstName = "test_name";
@@ -155,8 +155,8 @@ public class UserRepositoryTest {
         user.addContact(thirdContact);
 
         var resultUser = userRepository.saveAndFlush(user);
-        var resultSecondContact = savedUser.getContacts().get(0);
-        var resultThirdContact = savedUser.getContacts().get(1);
+        var resultSecondContact = resultUser.getContacts().get(0);
+        var resultThirdContact = resultUser.getContacts().get(1);
 
         assertAll(
                 () -> assertThat(resultUser.getContacts()).hasSize(2),
@@ -177,7 +177,7 @@ public class UserRepositoryTest {
         var savedUser = entityManager.persist(user);
         var savedContact = savedUser.getContacts().get(0);
 
-        savedUser.removeContact(savedContact);
+        savedUser.getContacts().clear();
 
         var resultUser = userRepository.saveAndFlush(savedUser);
         var resultContacts = entityManager.find(Contact.class, savedContact.getContactId());
@@ -185,6 +185,56 @@ public class UserRepositoryTest {
         assertAll(
                 () -> assertThat(resultUser.getContacts()).hasSize(0),
                 () -> assertThat(resultContacts).isNull()
+        );
+    }
+
+
+    @DisplayName("Should select user by id")
+    @Test
+    void shouldSelect_userById() {
+        user.addContact(firstContact);
+
+        userRepository.saveAndFlush(user);
+
+        var resultUser = userRepository.findById(id).get();
+        var resultContact = resultUser.getContacts().get(0);
+
+        assertAll(
+                () -> assertThat(resultUser.getUserId()).isEqualTo(id),
+                () -> assertThat(resultUser.getFirstName()).isEqualTo(firstName),
+                () -> assertThat(resultContact.getContactId()).isEqualTo(id),
+                () -> assertThat(resultContact.getValue()).isEqualTo(firstEmail)
+        );
+
+    }
+
+
+    @DisplayName("Should select all users")
+    @Test
+    void shouldSelect_allUsers() {
+        user.addContact(firstContact);
+        userRepository.saveAndFlush(user);
+
+        var secondUser = User.builder().firstName("test").build();
+        secondUser.addContact(secondContact);
+        userRepository.saveAndFlush(secondUser);
+
+        var resultList = userRepository.findAll();
+        var resultFirstUser = resultList.get(0);
+        var resultFirstContact = resultFirstUser.getContacts().get(0);
+        var resultSecondUser = resultList.get(1);
+        var resultSecondContact = resultSecondUser.getContacts().get(0);
+
+        assertAll(
+                () -> assertThat(resultList).hasSize(2),
+                () -> assertThat(resultFirstUser.getUserId()).isEqualTo(id),
+                () -> assertThat(resultFirstUser.getFirstName()).isEqualTo(firstName),
+                () -> assertThat(resultFirstContact.getContactId()).isEqualTo(id),
+                () -> assertThat(resultFirstContact.getValue()).isEqualTo(firstEmail),
+                () -> assertThat(resultSecondUser.getUserId()).isEqualTo(2L),
+                () -> assertThat(resultSecondUser.getFirstName()).isEqualTo("test"),
+                () -> assertThat(resultSecondContact.getContactId()).isEqualTo(2L),
+                () -> assertThat(resultSecondContact.getValue()).isEqualTo(secondEmail)
         );
     }
 

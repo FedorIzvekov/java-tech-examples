@@ -1,5 +1,6 @@
 package com.fedorizvekov.query.jpa.model.entity;
 
+import static com.fedorizvekov.query.jpa.model.enums.ContactStatus.NOT_CONFIRMED;
 import static java.util.Objects.hash;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -15,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fedorizvekov.query.jpa.model.enums.ContactStatus;
 import com.fedorizvekov.query.jpa.model.enums.ContactType;
 import lombok.AllArgsConstructor;
@@ -22,12 +24,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "contact")
 @Builder
 @Getter
 @Setter
+@ToString(exclude = "user")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Contact {
@@ -46,15 +50,17 @@ public class Contact {
     @Column(name = "confirmation_code", nullable = false, length = 10)
     private String confirmationCode;
 
-    @Column(name = "status", columnDefinition = "TINYINT", nullable = false)
-    private ContactStatus status;
-
-    @Embedded
     @Builder.Default
+    @Column(name = "status", columnDefinition = "TINYINT", nullable = false)
+    private ContactStatus status = NOT_CONFIRMED;
+
+    @Builder.Default
+    @Embedded
     private Timestamps timestamps = new Timestamps();
 
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
 
