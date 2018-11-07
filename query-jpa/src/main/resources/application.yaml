@@ -14,6 +14,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+    show-sql: true
 
 management:
   endpoint:
@@ -29,3 +31,4 @@ logging:
     console: "%magenta(%d) %highlight(%-5level)[%cyan(%t)] %yellow(%logger{1.}): - %msg%n%throwable"
   level:
     org.springframework: INFO
+    org.hibernate.SQL: INFO

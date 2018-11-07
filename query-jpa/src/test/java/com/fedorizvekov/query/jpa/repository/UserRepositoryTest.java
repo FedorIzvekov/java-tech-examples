@@ -195,6 +195,7 @@ class UserRepositoryTest {
         user.addContact(firstContact);
 
         userRepository.saveAndFlush(user);
+        entityManager.clear();
 
         var resultUser = userRepository.findById(id).get();
         var resultContact = resultUser.getContacts().get(0);
@@ -218,6 +219,7 @@ class UserRepositoryTest {
         var secondUser = User.builder().firstName("test").build();
         secondUser.addContact(secondContact);
         userRepository.saveAndFlush(secondUser);
+        entityManager.clear();
 
         var resultList = userRepository.findAll();
         var resultFirstUser = resultList.get(0);
