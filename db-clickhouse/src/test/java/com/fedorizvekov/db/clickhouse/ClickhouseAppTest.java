@@ -1,13 +1,15 @@
 package com.fedorizvekov.db.clickhouse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class ClickhouseAppTest {
+class ClickhouseAppTest {
 
+    @DisplayName("Should context loads")
     @Test
-    public void shouldContextLoads() {
+    void shouldContextLoads() {
         ClickhouseApp.main(new String[]{});
     }
 
