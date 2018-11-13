@@ -1,13 +1,15 @@
 package com.fedorizvekov.db.mysql;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class MysqlAppTest {
+class MysqlAppTest {
 
+    @DisplayName("Should context loads")
     @Test
-    public void shouldContextLoads() {
+    void shouldContextLoads() {
         MysqlApp.main(new String[]{});
     }
 
