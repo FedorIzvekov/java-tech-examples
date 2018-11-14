@@ -1,13 +1,14 @@
 package com.fedorizvekov.db.oracle;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class OracleAppTest {
+class OracleAppTest {
 
+    @DisplayName("Should context loads")
     @Test
-    public void shouldContextLoads() {
+    void shouldContextLoads() {
         OracleApp.main(new String[]{});
     }
 
