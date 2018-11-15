@@ -41,7 +41,7 @@ public class PostgresqlExceptionHandler {
     public ErrorResponse handlerPersistenceException(Exception exception) {
         return ErrorResponse.builder()
                 .errorCode(INTERNAL_SERVER_ERROR.value())
-                .errorMessage(logAndCreateErrorMessage("PersistenceException", exception.getMessage()))
+                .errorMessage(logAndCreateErrorMessage("DataBaseException", exception.getMessage()))
                 .build();
     }
 

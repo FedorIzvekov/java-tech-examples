@@ -1,13 +1,15 @@
 package com.fedorizvekov.db.postgresql;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class PostgresqlAppTest {
+class PostgresqlAppTest {
 
+    @DisplayName("Should context loads")
     @Test
-    public void shouldContextLoads() {
+    void shouldContextLoads() {
         PostgresqlApp.main(new String[]{});
     }
 
