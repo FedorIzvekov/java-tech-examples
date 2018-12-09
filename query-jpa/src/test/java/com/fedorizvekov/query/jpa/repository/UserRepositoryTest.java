@@ -5,11 +5,15 @@ import static com.fedorizvekov.query.jpa.model.enums.ContactType.PHONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.io.File;
+import java.sql.DriverManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import com.fedorizvekov.query.jpa.model.entity.Contact;
 import com.fedorizvekov.query.jpa.model.entity.User;
 import com.fedorizvekov.query.jpa.model.enums.Gender;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +21,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.containers.MariaDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class UserRepositoryTest {
+@DataJpaTest
+@Testcontainers
+public class UserRepositoryTest {
+
+    @Container
+    private static final MariaDBContainer<?> MARIADB_CONTAINER = new MariaDBContainer<>(MariaDBContainer.NAME)
+            .withDatabaseName("query_jpa");
 
     private final Long id = 1L;
     private final String firstName = "test_name";
@@ -41,6 +56,36 @@ class UserRepositoryTest {
     private UserRepository userRepository;
     @Autowired
     private TestEntityManager entityManager;
+
+
+    @BeforeAll
+    @Sql
+    static void start() throws Exception {
+        MARIADB_CONTAINER.start();
+
+        System.setProperty("spring.datasource.url", MARIADB_CONTAINER.getJdbcUrl());
+        System.setProperty("spring.datasource.username", MARIADB_CONTAINER.getUsername());
+        System.setProperty("spring.datasource.password", MARIADB_CONTAINER.getPassword());
+
+        try (var connection = DriverManager.getConnection(
+                MARIADB_CONTAINER.getJdbcUrl(),
+                MARIADB_CONTAINER.getUsername(),
+                MARIADB_CONTAINER.getPassword())
+        ) {
+
+            var sqlFiles = new File("sql").listFiles((dir, name) -> name.endsWith(".sql"));
+
+            for (var sqlFile : sqlFiles) {
+                ScriptUtils.executeSqlScript(connection, new FileSystemResource(sqlFile));
+            }
+        }
+    }
+
+
+    @AfterAll
+    static void stop() {
+        MARIADB_CONTAINER.stop();
+    }
 
 
     @BeforeEach
