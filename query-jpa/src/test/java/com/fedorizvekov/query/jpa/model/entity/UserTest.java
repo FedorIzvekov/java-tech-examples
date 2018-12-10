@@ -1,6 +1,6 @@
 package com.fedorizvekov.query.jpa.model.entity;
 
-import static com.fedorizvekov.query.jpa.model.enums.Gender.NOT_DEFINED;
+import static com.fedorizvekov.query.jpa.model.enums.Gender.MALE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -54,7 +54,7 @@ class UserTest {
     @DisplayName("Should not equals and hash code by values")
     @Test
     void should_notEqualsAndHashCode_byValues() {
-        var user = User.builder().firstName("Test").gender(NOT_DEFINED).build();
+        var user = User.builder().firstName("Test").gender(MALE).build();
         var userWithSameValues = User.builder().firstName("Test").build();
 
         assertAll(
