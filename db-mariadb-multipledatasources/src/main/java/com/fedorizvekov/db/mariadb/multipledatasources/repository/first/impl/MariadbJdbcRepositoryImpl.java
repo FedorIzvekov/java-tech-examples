@@ -26,7 +26,7 @@ public class MariadbJdbcRepositoryImpl implements MariadbJdbcRepository {
 
 
     public MariadbJdbcRepositoryImpl(
-            @Qualifier("mariadbDataSource") DataSource dataSource,
+            @Qualifier("firstDataSource") DataSource dataSource,
             ResultSetMapper resultSetMapper
     ) {
         this.dataSource = dataSource;

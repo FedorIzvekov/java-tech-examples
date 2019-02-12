@@ -21,40 +21,40 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableJpaRepositories(
         basePackageClasses = {SecondMariadbJpaRepository.class},
-        entityManagerFactoryRef = "secondMariadbEntityManager",
-        transactionManagerRef = "secondMariadbTransactionManager"
+        entityManagerFactoryRef = "secondEntityManager",
+        transactionManagerRef = "secondTransactionManager"
 )
 @EnableTransactionManagement
-public class SecondMariadbConfig {
+public class DatasourceSecondConfig {
 
-    @Value("${mariadb.hibernate.dialect}")
+    @Value("${hibernate.dialect}")
     private String dialectProperties;
 
     @Value("${hibernate.hbm2ddl.auto}")
     private String ddlAutoProperties;
 
 
-    @Bean("secondMariadbProperties")
-    @ConfigurationProperties("second.mariadb.datasource")
-    public DataSourceProperties mariadbProperties() {
+    @Bean("secondProperties")
+    @ConfigurationProperties("datasource.second")
+    public DataSourceProperties secondProperties() {
         return new DataSourceProperties();
     }
 
 
-    @Bean("secondMariadbDataSource")
-    public DataSource mariadbDataSource(@Qualifier("secondMariadbProperties") DataSourceProperties mariadbProperties) {
+    @Bean("secondDataSource")
+    public DataSource secondDataSource(@Qualifier("secondProperties") DataSourceProperties mariadbProperties) {
         return mariadbProperties.initializeDataSourceBuilder().build();
     }
 
 
     @Bean
-    public JdbcTemplate mariadbJdbcTemplate(@Qualifier("secondMariadbDataSource") DataSource dataSource) {
+    public JdbcTemplate jdbcTemplate(@Qualifier("secondDataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 
 
-    @Bean("secondMariadbEntityManager")
-    public LocalContainerEntityManagerFactoryBean mariadbEntityManager(@Qualifier("secondMariadbDataSource") DataSource dataSource) {
+    @Bean("secondEntityManager")
+    public LocalContainerEntityManagerFactoryBean secondEntityManager(@Qualifier("secondDataSource") DataSource dataSource) {
         var vendorAdapter = new HibernateJpaVendorAdapter();
         var entityManager = new LocalContainerEntityManagerFactoryBean();
         entityManager.setDataSource(dataSource);
@@ -62,12 +62,11 @@ public class SecondMariadbConfig {
         entityManager.setJpaVendorAdapter(vendorAdapter);
         entityManager.setJpaProperties(hibernateProperties());
         return entityManager;
-
     }
 
 
-    @Bean(name = "secondMariadbTransactionManager")
-    public PlatformTransactionManager mariadbTransactionManager(@Qualifier("secondMariadbEntityManager") EntityManagerFactory entityManager) {
+    @Bean(name = "secondTransactionManager")
+    public PlatformTransactionManager secondTransactionManager(@Qualifier("secondEntityManager") EntityManagerFactory entityManager) {
         return new JpaTransactionManager(entityManager);
     }
 

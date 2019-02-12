@@ -5,19 +5,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Optional;
-import com.fedorizvekov.db.mariadb.multipledatasources.config.MariadbConfig;
-import com.fedorizvekov.db.mariadb.multipledatasources.config.SecondMariadbConfig;
+import com.fedorizvekov.db.mariadb.multipledatasources.config.DatasourceFirstConfig;
+import com.fedorizvekov.db.mariadb.multipledatasources.config.DatasourceSecondConfig;
+import com.fedorizvekov.db.mariadb.multipledatasources.extension.MariadbExtension;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
-@DataJpaTest
-@ContextConfiguration(classes = {MariadbConfig.class, SecondMariadbConfig.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ContextConfiguration(classes = {DatasourceFirstConfig.class, DatasourceSecondConfig.class})
+@DataJpaTest
+@ExtendWith(MariadbExtension.class)
 class SecondMariadbJpaRepositoryTest {
 
     @Autowired

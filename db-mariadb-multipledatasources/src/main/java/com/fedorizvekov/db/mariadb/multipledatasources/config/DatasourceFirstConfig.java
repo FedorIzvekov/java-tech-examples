@@ -21,13 +21,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableJpaRepositories(
         basePackageClasses = {MariadbJpaRepository.class},
-        entityManagerFactoryRef = "mariadbEntityManager",
-        transactionManagerRef = "mariadbTransactionManager"
+        entityManagerFactoryRef = "firstEntityManager",
+        transactionManagerRef = "firstTransactionManager"
 )
 @EnableTransactionManagement
-public class MariadbConfig {
+public class DatasourceFirstConfig {
 
-    @Value("${mariadb.hibernate.dialect}")
+    @Value("${hibernate.dialect}")
     private String dialectProperties;
 
     @Value("${hibernate.hbm2ddl.auto}")
@@ -35,23 +35,23 @@ public class MariadbConfig {
 
 
     @Primary
-    @Bean("mariadbProperties")
-    @ConfigurationProperties("mariadb.datasource")
-    public DataSourceProperties mariadbProperties() {
+    @Bean("firstProperties")
+    @ConfigurationProperties("datasource.first")
+    public DataSourceProperties firstProperties() {
         return new DataSourceProperties();
     }
 
 
     @Primary
-    @Bean("mariadbDataSource")
-    public DataSource mariadbDataSource(@Qualifier("mariadbProperties") DataSourceProperties mariadbProperties) {
+    @Bean("firstDataSource")
+    public DataSource firstDataSource(@Qualifier("firstProperties") DataSourceProperties mariadbProperties) {
         return mariadbProperties.initializeDataSourceBuilder().build();
     }
 
 
     @Primary
-    @Bean("mariadbEntityManager")
-    public LocalContainerEntityManagerFactoryBean mariadbEntityManager(@Qualifier("mariadbDataSource") DataSource dataSource) {
+    @Bean("firstEntityManager")
+    public LocalContainerEntityManagerFactoryBean firstEntityManager(@Qualifier("firstDataSource") DataSource dataSource) {
         var vendorAdapter = new HibernateJpaVendorAdapter();
         var entityManager = new LocalContainerEntityManagerFactoryBean();
         entityManager.setDataSource(dataSource);
@@ -63,8 +63,8 @@ public class MariadbConfig {
 
 
     @Primary
-    @Bean(name = "mariadbTransactionManager")
-    public PlatformTransactionManager mariadbTransactionManager(@Qualifier("mariadbEntityManager") EntityManagerFactory entityManager) {
+    @Bean(name = "firstTransactionManager")
+    public PlatformTransactionManager firstTransactionManager(@Qualifier("firstEntityManager") EntityManagerFactory entityManager) {
         return new JpaTransactionManager(entityManager);
     }
 

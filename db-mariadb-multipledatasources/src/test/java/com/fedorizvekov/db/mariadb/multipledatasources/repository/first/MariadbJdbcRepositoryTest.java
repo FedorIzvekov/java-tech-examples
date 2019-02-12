@@ -9,22 +9,25 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 import java.util.UUID;
-import com.fedorizvekov.db.mariadb.multipledatasources.config.MariadbConfig;
+import com.fedorizvekov.db.mariadb.multipledatasources.config.DatasourceFirstConfig;
+import com.fedorizvekov.db.mariadb.multipledatasources.extension.MariadbExtension;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.impl.MariadbJdbcRepositoryImpl;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.impl.ResultSetMapperImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 
-@JdbcTest
-@Import({MariadbJdbcRepositoryImpl.class, ResultSetMapperImpl.class})
-@ContextConfiguration(classes = MariadbConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ContextConfiguration(classes = DatasourceFirstConfig.class)
+@ExtendWith(MariadbExtension.class)
+@Import({MariadbJdbcRepositoryImpl.class, ResultSetMapperImpl.class})
+@JdbcTest
 public class MariadbJdbcRepositoryTest {
 
     public static final char CHAR = 'A';
