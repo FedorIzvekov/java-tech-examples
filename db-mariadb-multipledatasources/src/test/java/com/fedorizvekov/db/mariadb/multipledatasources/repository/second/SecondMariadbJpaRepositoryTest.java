@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.Optional;
 import com.fedorizvekov.db.mariadb.multipledatasources.config.DatasourceFirstConfig;
 import com.fedorizvekov.db.mariadb.multipledatasources.config.DatasourceSecondConfig;
+import com.fedorizvekov.db.mariadb.multipledatasources.config.LiquibaseConfig;
 import com.fedorizvekov.db.mariadb.multipledatasources.extension.MariadbExtension;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +19,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {DatasourceFirstConfig.class, DatasourceSecondConfig.class})
+@ContextConfiguration(classes = {DatasourceFirstConfig.class, DatasourceSecondConfig.class, LiquibaseConfig.class})
 @DataJpaTest
 @ExtendWith(MariadbExtension.class)
 class SecondMariadbJpaRepositoryTest {

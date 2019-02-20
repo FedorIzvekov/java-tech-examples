@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/version-1.0.0/001_create_table_type_value.yaml
+  - include:
+      file: db/changelog/changeset/version-1.0.0/002_first_insert_rows.yaml

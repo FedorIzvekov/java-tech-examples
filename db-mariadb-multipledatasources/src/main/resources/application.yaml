@@ -7,11 +7,15 @@ datasource:
     username: first_test_user
     password: test_User_123
     driver-class-name: org.mariadb.jdbc.Driver
+    liquibase:
+      change-log: classpath:/db/changelog/db.changelog-master.yaml
   second:
     url: jdbc:mariadb://localhost:3307/multiple_data_sources
     username: second_test_user
     password: test_User_123
     driver-class-name: org.mariadb.jdbc.Driver
+    liquibase:
+      change-log: classpath:/db/changelog/db.second.changelog-master.yaml
 
 hibernate:
   dialect: org.hibernate.dialect.MariaDBDialect

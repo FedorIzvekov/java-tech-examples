@@ -10,6 +10,8 @@ import java.time.LocalTime;
 import java.util.Optional;
 import java.util.UUID;
 import com.fedorizvekov.db.mariadb.multipledatasources.config.DatasourceFirstConfig;
+import com.fedorizvekov.db.mariadb.multipledatasources.config.DatasourceSecondConfig;
+import com.fedorizvekov.db.mariadb.multipledatasources.config.LiquibaseConfig;
 import com.fedorizvekov.db.mariadb.multipledatasources.extension.MariadbExtension;
 import com.fedorizvekov.db.mariadb.multipledatasources.model.entity.TypeValue;
 import com.fedorizvekov.db.mariadb.multipledatasources.repository.first.impl.MariadbJdbcRepositoryImpl;
@@ -24,7 +26,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = DatasourceFirstConfig.class)
+@ContextConfiguration(classes = {DatasourceFirstConfig.class, DatasourceSecondConfig.class, LiquibaseConfig.class})
 @ExtendWith(MariadbExtension.class)
 @Import({MariadbJdbcRepositoryImpl.class, ResultSetMapperImpl.class})
 @JdbcTest

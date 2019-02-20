@@ -18,8 +18,8 @@ services:
       - "3306:3306"
     volumes:
       - ../../../data/first_mariadb:/var/lib/mysql
-      - ./sql/mariadb/001_create_table_type_value.sql:/docker-entrypoint-initdb.d/001_create_table_type_value.sql
-      - ./sql/mariadb/002_datasource_first_insert.sql:/docker-entrypoint-initdb.d/002_datasource_first_insert.sql
+#      - ./sql/mariadb/001_create_table_type_value.sql:/docker-entrypoint-initdb.d/001_create_table_type_value.sql
+#      - ./sql/mariadb/002_datasource_first_insert.sql:/docker-entrypoint-initdb.d/002_datasource_first_insert.sql
     networks:
       - mariadb_first_network
 
@@ -36,7 +36,7 @@ services:
       - "3307:3306"
     volumes:
       - ../../../data/second_mariadb:/var/lib/mysql
-      - ./sql/mariadb/001_create_table_type_value.sql:/docker-entrypoint-initdb.d/001_create_table_type_value.sql
-      - ./sql/mariadb/002_datasource_second_insert.sql:/docker-entrypoint-initdb.d/002_datasource_second_insert.sql
+#      - ./sql/mariadb/001_create_table_type_value.sql:/docker-entrypoint-initdb.d/001_create_table_type_value.sql
+#      - ./sql/mariadb/002_datasource_second_insert.sql:/docker-entrypoint-initdb.d/002_datasource_second_insert.sql
     networks:
       - mariadb_second_network

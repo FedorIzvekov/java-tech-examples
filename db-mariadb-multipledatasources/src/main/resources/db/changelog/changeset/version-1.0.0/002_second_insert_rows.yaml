@@ -1,0 +1,91 @@
+databaseChangeLog:
+  - changeSet:
+      id: second-insert-rows
+      author: FedorIzvekov
+      changes:
+        - tagDatabase:
+            tag: version-1.0.0
+        - insert:
+            tableName: type_value
+            columns:
+              - column:
+                  name: database_name
+                  value: 'MARIADB second shard (Кириллица тест)'
+              - column:
+                  name: string_value
+                  valueComputed: "VERSION()"
+              - column:
+                  name: char_value
+                  value: 'A'
+              - column:
+                  name: local_date_value
+                  value: '1990-01-31'
+              - column:
+                  name: local_time_value
+                  value: '10:30:59'
+              - column:
+                  name: local_date_time_value
+                  value: '1990-01-31 10:30:59'
+              - column:
+                  name: byte_value
+                  value: 127
+              - column:
+                  name: short_value
+                  value: 32767
+              - column:
+                  name: integer_value
+                  value: 2147483647
+              - column:
+                  name: big_decimal_value
+                  value: '99999999999999999.99'
+              - column:
+                  name: boolean_value
+                  value: 1
+              - column:
+                  name: uuid_value
+                  valueComputed: "UNHEX(REPLACE('1b6b2e07-78dc-43f5-9d94-bd77304a545c', '-', ''))"
+              - column:
+                  name: blob_value
+                  valueComputed: "LOAD_FILE('/var/lib/mysql/1.jpg')"
+        - insert:
+            tableName: type_value
+            columns:
+              - column:
+                  name: database_name
+                  value: "MARIADB second shard (Кириллица тест)"
+              - column:
+                  name: string_value
+                  valueComputed: "VERSION()"
+              - column:
+                  name: char_value
+                  value: "D"
+              - column:
+                  name: local_date_value
+                  valueComputed: "CURRENT_DATE()"
+              - column:
+                  name: local_time_value
+                  valueComputed: "CURRENT_TIME()"
+              - column:
+                  name: local_date_time_value
+                  valueComputed: "CURRENT_TIMESTAMP()"
+              - column:
+                  name: byte_value
+                  value: 1
+              - column:
+                  name: short_value
+                  value: 100
+              - column:
+                  name: integer_value
+                  value: 1000
+              - column:
+                  name: big_decimal_value
+                  value: 1234.56
+              - column:
+                  name: boolean_value
+                  value: 0
+              - column:
+                  name: uuid_value
+                  valueComputed: "UNHEX(REPLACE(UUID(), '-', ''))"
+              - column:
+                  name: blob_value
+                  valueComputed: "LOAD_FILE('/var/lib/mysql/1.jpg')"

@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-type-value
+      author: FedorIzvekov
+      changes:
+        - tagDatabase:
+            tag: version-1.0.0
+        - createTable:
+            tableName: type_value
+            remarks: "MariaDB Type Value Examples Table"
+            columns:
+              - column:
+                  name: long_id
+                  remarks: unique
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    unique: true
+                    primaryKey: true
+                    primaryKeyName: long_id_pk
+                    nullable: false
+              - column:
+                  name: database_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: string_value
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: char_value
+                  type: CHAR(1)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: local_date_value
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: local_time_value
+                  type: TIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: local_date_time_value
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: byte_value
+                  type: TINYINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: short_value
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: integer_value
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: big_decimal_value
+                  type: DECIMAL(19,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: boolean_value
+                  type: TINYINT(1)
+                  constraints:
+                    checkConstraint: boolean_value IN (0, 1)
+                    nullable: false
+              - column:
+                  name: uuid_value
+                  type: BINARY(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: blob_value
+                  type: LONGBLOB
+      rollback:
+        - dropTable:
+            tableName: type_value
