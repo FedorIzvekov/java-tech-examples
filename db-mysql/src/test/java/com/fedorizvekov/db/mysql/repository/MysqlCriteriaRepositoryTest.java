@@ -5,18 +5,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Optional;
+import com.fedorizvekov.db.mysql.extension.MysqlExtension;
 import com.fedorizvekov.db.mysql.model.entity.TypeValue;
 import com.fedorizvekov.db.mysql.repository.impl.MysqlCriteriaRepositoryImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-@DataJpaTest
-@Import({MysqlCriteriaRepositoryImpl.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@DataJpaTest
+@ExtendWith(MysqlExtension.class)
+@Import({MysqlCriteriaRepositoryImpl.class})
 class MysqlCriteriaRepositoryTest {
 
     @Autowired
