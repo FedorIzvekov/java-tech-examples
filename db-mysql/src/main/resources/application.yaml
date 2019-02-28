@@ -10,6 +10,8 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       transaction-isolation: TRANSACTION_READ_COMMITTED
+  liquibase:
+    enabled: true
   jpa:
     hibernate:
       ddl-auto: validate
