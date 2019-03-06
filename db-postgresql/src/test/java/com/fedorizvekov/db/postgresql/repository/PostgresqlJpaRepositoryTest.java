@@ -9,15 +9,18 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 import java.util.UUID;
+import com.fedorizvekov.db.postgresql.extension.PostgresqlExtension;
 import com.fedorizvekov.db.postgresql.model.entity.TypeValue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@DataJpaTest
+@ExtendWith(PostgresqlExtension.class)
 class PostgresqlJpaRepositoryTest {
 
     public static final char CHAR = 'A';
@@ -33,7 +36,6 @@ class PostgresqlJpaRepositoryTest {
 
     @Autowired
     private PostgresqlJpaRepository repository;
-
 
     @DisplayName("Should count rows")
     @Test

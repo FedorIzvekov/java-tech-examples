@@ -10,9 +10,9 @@ INSERT INTO test_schema.type_value (
     integer_value,
     big_decimal_value,
     boolean_value,
-    uuid_value,
-    blob_value,
-    oid_value
+    uuid_value
+--    blob_value,
+--    oid_value
 )
 VALUES (
     'POSTGRESQL (Кириллица тест)',
@@ -26,9 +26,9 @@ VALUES (
     2147483647,
     99999999999999999.99,
     true,
-    '1b6b2e07-78dc-43f5-9d94-bd77304a545c'::uuid,
-    pg_read_binary_file('/var/lib/postgresql/data/1.jpg'),
-    lo_import('/var/lib/postgresql/data/1.jpg')
+    '1b6b2e07-78dc-43f5-9d94-bd77304a545c'::uuid
+--    pg_read_binary_file('/var/lib/postgresql/data/1.jpg'),
+--    lo_import('/var/lib/postgresql/data/1.jpg')
 ),
 (
     'POSTGRESQL (Кириллица тест)',
@@ -42,9 +42,9 @@ VALUES (
     1000,
     1234.56,
     false,
-    gen_random_uuid(),
-    pg_read_binary_file('/var/lib/postgresql/data/1.jpg'),
-    lo_import('/var/lib/postgresql/data/1.jpg')
+    gen_random_uuid()
+--    pg_read_binary_file('/var/lib/postgresql/data/1.jpg'),
+--    lo_import('/var/lib/postgresql/data/1.jpg')
 );
 
 

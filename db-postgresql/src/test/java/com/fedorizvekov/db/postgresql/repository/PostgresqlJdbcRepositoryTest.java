@@ -5,19 +5,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Optional;
+import com.fedorizvekov.db.postgresql.extension.PostgresqlExtension;
 import com.fedorizvekov.db.postgresql.model.entity.TypeValue;
 import com.fedorizvekov.db.postgresql.repository.impl.PostgresqlJdbcRepositoryImpl;
 import com.fedorizvekov.db.postgresql.repository.impl.RowMapperImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
-@JdbcTest
-@Import({PostgresqlJdbcRepositoryImpl.class, RowMapperImpl.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ExtendWith(PostgresqlExtension.class)
+@Import({PostgresqlJdbcRepositoryImpl.class, RowMapperImpl.class})
+@JdbcTest
 class PostgresqlJdbcRepositoryTest {
 
     @Autowired
