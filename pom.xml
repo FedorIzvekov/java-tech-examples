@@ -17,6 +17,7 @@
         <module>db-oracle</module>
         <module>db-postgresql</module>
         <module>db-mariadb-multipledatasources</module>
+        <module>query-data-rest</module>
         <module>query-jpa</module>
     </modules>
 

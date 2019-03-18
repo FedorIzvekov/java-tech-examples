@@ -10,4 +10,5 @@ This project has modules:
 * [Database Oracle](db-oracle/README.md#project-database-oracle)
 * [Database PostgreSQL](db-postgresql/README.md#project-database-postgresql)
 * [Database MariaDB multiple data sources](db-mariadb-multipledatasources/README.md#project-database-mariadb-multiple-data-sources)
+* [Query Data Rest](query-data-rest/README.md#project-query-data-rest)
 * [Query JPA](query-jpa/README.md#project-query-jpa)
