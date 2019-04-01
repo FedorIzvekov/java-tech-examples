@@ -19,6 +19,7 @@
         <module>db-mariadb-multipledatasources</module>
         <module>query-data-rest</module>
         <module>query-jpa</module>
+        <module>statemachine</module>
     </modules>
 
     <properties>
@@ -27,6 +28,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <spring-boot.version>2.1.0.RELEASE</spring-boot.version>
+        <spring-statemachine.version>2.1.1.RELEASE</spring-statemachine.version>
         <testcontainers.version>1.10.1</testcontainers.version>
         <clickhouse-jdbc.version>0.1.42</clickhouse-jdbc.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -38,6 +40,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.statemachine</groupId>
+                <artifactId>spring-statemachine-bom</artifactId>
+                <version>${spring-statemachine.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

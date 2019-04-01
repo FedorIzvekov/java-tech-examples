@@ -12,3 +12,4 @@ This project has modules:
 * [Database MariaDB multiple data sources](db-mariadb-multipledatasources/README.md#project-database-mariadb-multiple-data-sources)
 * [Query Data Rest](query-data-rest/README.md#project-query-data-rest)
 * [Query JPA](query-jpa/README.md#project-query-jpa)
+* [StateMachine](statemachine/README.md#project-statemachine)
