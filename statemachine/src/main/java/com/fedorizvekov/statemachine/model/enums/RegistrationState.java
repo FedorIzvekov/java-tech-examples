@@ -1,0 +1,17 @@
+package com.fedorizvekov.statemachine.model.enums;
+
+public enum RegistrationState {
+
+    INITIAL,
+    EMAIL_VERIFICATION,
+    PHONE_VERIFICATION,
+    SELECT_IDENTIFICATION_METHOD,
+    FAST_IDENTIFICATION,
+    DATA_REQUESTED,
+    FULL_IDENTIFICATION,
+    PHOTO_VERIFICATION,
+    BLACKLIST_CHECKING,
+    COMPLETED,
+    BLOCKED
+
+}
