@@ -4,30 +4,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fedorizvekov.statemachine.model.enums.RegistrationEvent;
 import com.fedorizvekov.statemachine.model.enums.RegistrationState;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 
 @SpringBootTest
 public class StateMachineConfigTest {
 
     @Autowired
-    private StateMachine<RegistrationState, RegistrationEvent> stateMachine;
-
-
-    @BeforeEach
-    void setUp() {
-        stateMachine.stop();
-    }
+    private StateMachineFactory<RegistrationState, RegistrationEvent> factory;
 
 
     @Test
     @DisplayName("Should start from INITIAL state")
     void shouldStart_fromInitialState() {
-        stateMachine.start();
+        var stateMachine = factory.getStateMachine();
         assertThat(stateMachine.getState().getId()).isEqualTo(RegistrationState.INITIAL);
     }
 
@@ -35,7 +28,8 @@ public class StateMachineConfigTest {
     @Test
     @DisplayName("Should return to SELECT_IDENTIFICATION_METHOD state")
     void shouldReturn_toSelectIdentificationMethodState() {
-        stateMachine.start();
+        var stateMachine = factory.getStateMachine();
+
         stateMachine.sendEvent(RegistrationEvent.NEW_USER_SAVED);
         stateMachine.sendEvent(RegistrationEvent.EMAIL_CONFIRMED);
         stateMachine.sendEvent(RegistrationEvent.PHONE_CONFIRMED);
@@ -57,7 +51,8 @@ public class StateMachineConfigTest {
     @Test
     @DisplayName("Should return to FULL_IDENTIFICATION state")
     void shouldReturn_toFullIdentificationState() {
-        stateMachine.start();
+        var stateMachine = factory.getStateMachine();
+
         stateMachine.sendEvent(RegistrationEvent.NEW_USER_SAVED);
         stateMachine.sendEvent(RegistrationEvent.EMAIL_CONFIRMED);
         stateMachine.sendEvent(RegistrationEvent.PHONE_CONFIRMED);
@@ -72,7 +67,8 @@ public class StateMachineConfigTest {
     @Test
     @DisplayName("Should finish to COMPLETED state via SELECT_FAST_IDENTIFICATION event")
     void shouldFinish_toCompletedState_viaSelectFastIdentificationEvent() {
-        stateMachine.start();
+        var stateMachine = factory.getStateMachine();
+
         stateMachine.sendEvent(RegistrationEvent.NEW_USER_SAVED);
         stateMachine.sendEvent(RegistrationEvent.EMAIL_CONFIRMED);
         stateMachine.sendEvent(RegistrationEvent.PHONE_CONFIRMED);
@@ -87,7 +83,8 @@ public class StateMachineConfigTest {
     @Test
     @DisplayName("Should finish to COMPLETED state via SELECT_FULL_IDENTIFICATION event")
     void shouldFinish_toCompletedState_viaSelectFullIdentificationEvent() {
-        stateMachine.start();
+        var stateMachine = factory.getStateMachine();
+
         stateMachine.sendEvent(RegistrationEvent.NEW_USER_SAVED);
         stateMachine.sendEvent(RegistrationEvent.EMAIL_CONFIRMED);
         stateMachine.sendEvent(RegistrationEvent.PHONE_CONFIRMED);
@@ -103,7 +100,8 @@ public class StateMachineConfigTest {
     @Test
     @DisplayName("Should finish to BLOCKED state")
     void shouldFinish_toBlockedState() {
-        stateMachine.start();
+        var stateMachine = factory.getStateMachine();
+
         stateMachine.sendEvent(RegistrationEvent.NEW_USER_SAVED);
         stateMachine.sendEvent(RegistrationEvent.EMAIL_CONFIRMED);
         stateMachine.sendEvent(RegistrationEvent.PHONE_CONFIRMED);
