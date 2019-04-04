@@ -31,6 +31,22 @@ java -jar ./target/statemachine-1.0.0-SNAPSHOT.jar
 
 ## Checking
 
+```
+curl -X GET http://localhost:8088/registration/state/1
+```
+
+```
+curl -X POST "http://localhost:8088/registration/event/1?event=NEW_USER_SAVED"
+```
+
+```
+curl -X POST "http://localhost:8088/registration/event/1?event=EMAIL_CONFIRMED"
+```
+
+```
+curl -X POST "http://localhost:8088/registration/event/1?event=PHONE_CONFIRMED"
+```
+
 ## Stopping
 
 Shutdown the application:
