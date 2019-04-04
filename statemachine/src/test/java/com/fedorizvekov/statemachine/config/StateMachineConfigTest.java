@@ -52,6 +52,7 @@ public class StateMachineConfigTest {
                 .sendEvent(RegistrationEvent.EMAIL_CONFIRMED)
                 .expectState(RegistrationState.PHONE_VERIFICATION)
                 .expectStateChanged(1)
+                .expectVariable("test", "add additional data")
 
                 .and().step()
                 .sendEvent(RegistrationEvent.PHONE_CONFIRMED)
@@ -119,6 +120,7 @@ public class StateMachineConfigTest {
                 .sendEvent(RegistrationEvent.EMAIL_CONFIRMED)
                 .expectState(RegistrationState.PHONE_VERIFICATION)
                 .expectStateChanged(1)
+                .expectVariable("test", "add additional data")
 
                 .and().step()
                 .sendEvent(RegistrationEvent.PHONE_CONFIRMED)
@@ -166,6 +168,7 @@ public class StateMachineConfigTest {
                 .sendEvent(RegistrationEvent.EMAIL_CONFIRMED)
                 .expectState(RegistrationState.PHONE_VERIFICATION)
                 .expectStateChanged(1)
+                .expectVariable("test", "add additional data")
 
                 .and().step()
                 .sendEvent(RegistrationEvent.PHONE_CONFIRMED)
@@ -213,6 +216,7 @@ public class StateMachineConfigTest {
                 .sendEvent(RegistrationEvent.EMAIL_CONFIRMED)
                 .expectState(RegistrationState.PHONE_VERIFICATION)
                 .expectStateChanged(1)
+                .expectVariable("test", "add additional data")
 
                 .and().step()
                 .sendEvent(RegistrationEvent.PHONE_CONFIRMED)
@@ -265,6 +269,7 @@ public class StateMachineConfigTest {
                 .sendEvent(RegistrationEvent.EMAIL_CONFIRMED)
                 .expectState(RegistrationState.PHONE_VERIFICATION)
                 .expectStateChanged(1)
+                .expectVariable("test", "add additional data")
 
                 .and().step()
                 .sendEvent(RegistrationEvent.PHONE_CONFIRMED)

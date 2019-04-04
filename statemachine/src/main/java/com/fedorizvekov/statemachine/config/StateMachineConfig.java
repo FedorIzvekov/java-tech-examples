@@ -6,12 +6,19 @@ import static com.fedorizvekov.statemachine.model.enums.RegistrationState.*;
 import java.util.EnumSet;
 import com.fedorizvekov.statemachine.model.enums.RegistrationEvent;
 import com.fedorizvekov.statemachine.model.enums.RegistrationState;
+import com.fedorizvekov.statemachine.service.impl.EmailConfirmationAction;
+import com.fedorizvekov.statemachine.service.impl.EmailGuard;
+import com.fedorizvekov.statemachine.service.impl.PhoneConfirmationAction;
+import com.fedorizvekov.statemachine.service.impl.PhoneGuard;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+import org.springframework.statemachine.guard.Guard;
 
 @Configuration
 @EnableStateMachineFactory
@@ -41,16 +48,20 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Regist
                 .source(INITIAL)
                 .target(EMAIL_VERIFICATION)
                 .event(NEW_USER_SAVED)
+                .action(emailConfirmationAction())
 
                 .and().withExternal()
                 .source(EMAIL_VERIFICATION)
                 .target(PHONE_VERIFICATION)
                 .event(EMAIL_CONFIRMED)
+                .action(phoneConfirmationAction())
+                .guard(emailGuard())
 
                 .and().withExternal()
                 .source(PHONE_VERIFICATION)
                 .target(SELECT_IDENTIFICATION_METHOD)
                 .event(PHONE_CONFIRMED)
+                .guard(phoneGuard())
 
                 .and().withExternal()
                 .source(SELECT_IDENTIFICATION_METHOD)
@@ -111,6 +122,30 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Regist
                 .source(BLACKLIST_CHECKING)
                 .target(BLOCKED)
                 .event(FAILED_CHECK);
+    }
+
+
+    @Bean
+    public Action<RegistrationState, RegistrationEvent> emailConfirmationAction() {
+        return new EmailConfirmationAction();
+    }
+
+
+    @Bean
+    public Action<RegistrationState, RegistrationEvent> phoneConfirmationAction() {
+        return new PhoneConfirmationAction();
+    }
+
+
+    @Bean
+    public Guard<RegistrationState, RegistrationEvent> emailGuard() {
+        return new EmailGuard();
+    }
+
+
+    @Bean
+    public Guard<RegistrationState, RegistrationEvent> phoneGuard() {
+        return new PhoneGuard();
     }
 
 }
