@@ -63,7 +63,7 @@ public class TypeValue {
     @Column(name = "big_decimal_value", nullable = false)
     private BigDecimal bigDecimalValue;
 
-    @Column(name = "boolean_value", nullable = false, columnDefinition = "int8") // ClickHouse not support boolean value
+    @Column(name = "boolean_value", nullable = false, columnDefinition = "uint8") // ClickHouse not support boolean value
     private Integer booleanValue;
 
     @Type(type = "uuid-char")

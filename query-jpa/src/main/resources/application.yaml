@@ -1,7 +1,11 @@
 server:
   port: 8080
+  shutdown: "graceful"
 
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: "1m"
+
   datasource:
     url: jdbc:mariadb://localhost:3306/query_jpa
     username: test_user

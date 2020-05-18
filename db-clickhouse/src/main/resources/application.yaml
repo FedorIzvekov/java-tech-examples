@@ -1,7 +1,11 @@
 server:
   port: 8086
+  shutdown: "graceful"
 
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: "1m"
+
   datasource:
     url: jdbc:clickhouse://localhost:8123/test_database
     username: test_user

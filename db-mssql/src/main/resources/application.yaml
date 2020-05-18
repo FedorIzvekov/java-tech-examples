@@ -1,7 +1,11 @@
 server:
   port: 8083
+  shutdown: "graceful"
 
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: "1m"
+
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     url: jdbc:sqlserver://;serverName=localhost;databaseName=test_database

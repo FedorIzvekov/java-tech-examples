@@ -1,7 +1,11 @@
 server:
   port: 8085
+  shutdown: "graceful"
 
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: "1m"
+
   datasource:
     url: jdbc:oracle:thin:@//localhost:1521/test_database
     username: test_user
