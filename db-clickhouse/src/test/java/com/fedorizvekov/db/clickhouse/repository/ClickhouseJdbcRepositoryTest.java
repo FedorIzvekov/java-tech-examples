@@ -5,19 +5,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Optional;
+import com.fedorizvekov.db.clickhouse.extension.ClickhouseExtension;
 import com.fedorizvekov.db.clickhouse.model.entity.TypeValue;
 import com.fedorizvekov.db.clickhouse.repository.impl.ClickhouseJdbcRepositoryImpl;
 import com.fedorizvekov.db.clickhouse.repository.impl.RowMapperImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
-@JdbcTest
-@Import({ClickhouseJdbcRepositoryImpl.class, RowMapperImpl.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ExtendWith(ClickhouseExtension.class)
+@Import({ClickhouseJdbcRepositoryImpl.class, RowMapperImpl.class})
+@JdbcTest
 class ClickhouseJdbcRepositoryTest {
 
     @Autowired
