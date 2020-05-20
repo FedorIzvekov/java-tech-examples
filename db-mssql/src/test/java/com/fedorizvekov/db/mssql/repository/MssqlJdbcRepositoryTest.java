@@ -5,19 +5,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Optional;
+import com.fedorizvekov.db.mssql.extension.MssqlExtension;
 import com.fedorizvekov.db.mssql.model.entity.TypeValue;
 import com.fedorizvekov.db.mssql.repository.impl.MssqlJdbcRepositoryImpl;
 import com.fedorizvekov.db.mssql.repository.impl.RowMapperImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 
-@JdbcTest
-@Import({MssqlJdbcRepositoryImpl.class, RowMapperImpl.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ExtendWith(MssqlExtension.class)
+@Import({MssqlJdbcRepositoryImpl.class, RowMapperImpl.class})
+@JdbcTest
 class MssqlJdbcRepositoryTest {
 
     @Autowired

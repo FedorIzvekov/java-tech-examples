@@ -33,7 +33,7 @@ public class TypeValue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "type_value_seq")
-    @SequenceGenerator(name = "type_value_seq", sequenceName = "type_value_long_id_seq")
+    @SequenceGenerator(name = "type_value_seq", sequenceName = "type_value_long_id_seq", allocationSize = 1)
     @Column(name = "long_id", nullable = false)
     private Long longId;
 
