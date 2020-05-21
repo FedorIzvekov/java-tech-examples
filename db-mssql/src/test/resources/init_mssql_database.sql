@@ -17,5 +17,6 @@ ALTER LOGIN test_user WITH DEFAULT_DATABASE = test_database;
 
 ALTER ROLE db_datareader ADD MEMBER test_user;
 ALTER ROLE db_datawriter ADD MEMBER test_user;
+ALTER ROLE db_ddladmin ADD MEMBER test_user;
 
 ALTER USER test_user WITH DEFAULT_SCHEMA = test_schema;

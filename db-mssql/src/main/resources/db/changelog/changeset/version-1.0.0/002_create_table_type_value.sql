@@ -1,9 +1,7 @@
-USE test_database;
+DROP TABLE IF EXISTS type_value;
 
-DROP TABLE IF EXISTS test_schema.type_value;
-
-CREATE TABLE test_schema.type_value (
-    long_id BIGINT DEFAULT NEXT VALUE FOR test_schema.type_value_long_id_seq,
+CREATE TABLE type_value (
+    long_id BIGINT DEFAULT NEXT VALUE FOR type_value_long_id_seq,
     database_name VARCHAR(100) NOT NULL,
     string_value VARCHAR(255) NOT NULL,
     char_value CHAR(1) NOT NULL,

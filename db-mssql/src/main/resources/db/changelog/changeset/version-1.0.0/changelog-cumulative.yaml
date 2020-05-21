@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-sequence-seq-type-value
+      author: FedorIzvekov
+      changes:
+        - sqlFile:
+            path: 001_create_sequence_seq_type_value.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: create-table-type-value
+      author: FedorIzvekov
+      changes:
+        - sqlFile:
+            path: 002_create_table_type_value.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: insert-rows
+      author: FedorIzvekov
+      changes:
+        - sqlFile:
+            path: 003_insert_rows.sql
+            relativeToChangelogFile: true

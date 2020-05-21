@@ -22,7 +22,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "type_value", schema = "test_schema")
+@Table(name = "type_value")
 @Builder
 @Getter
 @Setter

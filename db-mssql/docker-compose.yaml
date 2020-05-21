@@ -36,7 +36,13 @@ services:
       bash -c '
         for file in ./docker-entrypoint-initdb.d/*.sql; do
           echo "Executing SQL file $$file"
-          until /opt/mssql-tools/bin/sqlcmd -U sa -P sa_user_123 -i "$$file" > /dev/null; do
+          until /opt/mssql-tools/bin/sqlcmd \
+            -U sa -P sa_user_123 \
+            -v DatabaseName=test_database \
+            -v SchemaName=test_schema \
+            -v LoginName=test_user \
+            -v Password=TestUser#123 \
+            -i "$$file" > /dev/null; do
             echo "Retry SQL execution for $$file"
             sleep 1
           done
@@ -44,12 +50,7 @@ services:
         exit 0
       '
     volumes:
-      - ./sql/mssql/001_create_database.sql:/docker-entrypoint-initdb.d/001_create_database.sql
-      - ./sql/mssql/002_create_schema.sql:/docker-entrypoint-initdb.d/002_create_schema.sql
-      - ./sql/mssql/003_create_user.sql:/docker-entrypoint-initdb.d/003_create_user.sql
-      - ./sql/mssql/004_create_sequence_seq_type_value.sql:/docker-entrypoint-initdb.d/004_create_sequence_seq_type_value.sql
-      - ./sql/mssql/005_create_table_type_value.sql:/docker-entrypoint-initdb.d/005_create_table_type_value.sql
-      - ./sql/mssql/006_insert_rows.sql:/docker-entrypoint-initdb.d/006_insert_rows.sql
+      - ./sql/mssql/init_mssql_database.sql:/docker-entrypoint-initdb.d/init_mssql_database.sql
     depends_on:
       mssql:
         condition: service_healthy

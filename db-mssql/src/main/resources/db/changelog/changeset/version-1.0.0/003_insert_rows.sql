@@ -1,6 +1,4 @@
-USE test_database;
-
-INSERT INTO test_schema.type_value (
+INSERT INTO type_value (
     database_name,
     string_value,
     char_value,
@@ -12,8 +10,7 @@ INSERT INTO test_schema.type_value (
     integer_value,
     big_decimal_value,
     boolean_value,
-    uuid_value,
-    blob_value
+    uuid_value
 )
 VALUES (
     'MSSQL (Кириллица тест)',
@@ -27,8 +24,7 @@ VALUES (
     2147483647,
     99999999999999999.99,
     1,
-    CAST('1b6b2e07-78dc-43f5-9d94-bd77304a545c' AS uniqueidentifier),
-    NULL
+    CAST('1b6b2e07-78dc-43f5-9d94-bd77304a545c' AS uniqueidentifier)
 ),
 (
     'MSSQL (Кириллица тест)',
@@ -42,6 +38,5 @@ VALUES (
     1000,
     1234.56,
     0,
-    NEWID(),
-    NULL
+    NEWID()
 );
