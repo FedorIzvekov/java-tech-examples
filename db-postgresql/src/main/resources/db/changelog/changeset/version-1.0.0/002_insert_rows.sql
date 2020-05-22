@@ -1,4 +1,4 @@
-INSERT INTO test_schema.type_value (
+INSERT INTO type_value (
     database_name,
     string_value,
     char_value,

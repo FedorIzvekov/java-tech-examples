@@ -14,9 +14,13 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       transaction-isolation: TRANSACTION_READ_COMMITTED
+  liquibase:
+    enabled: true
+    default-schema: test_schema
   jpa:
     hibernate:
       ddl-auto: validate
+      default_schema: ${spring.liquibase.default-schema}
 
 management:
   endpoint:

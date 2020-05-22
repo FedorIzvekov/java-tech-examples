@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS test_schema.type_value;
+DROP TABLE IF EXISTS type_value;
 
-CREATE TABLE test_schema.type_value (
+CREATE TABLE type_value (
     long_id BIGSERIAL NOT NULL,
     database_name VARCHAR(100) NOT NULL,
     string_value VARCHAR(255) NOT NULL,
@@ -19,4 +19,4 @@ CREATE TABLE test_schema.type_value (
     CONSTRAINT type_value_pkey PRIMARY KEY (long_id)
 );
 
-COMMENT ON COLUMN test_schema.type_value.long_id is 'Unique identifier';
+COMMENT ON COLUMN type_value.long_id is 'Unique identifier';

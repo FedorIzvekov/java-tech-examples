@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-type-value
+      author: FedorIzvekov
+      changes:
+        - sqlFile:
+            path: 001_create_table_type_value.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: insert-rows
+      author: FedorIzvekov
+      changes:
+        - sqlFile:
+            path: 002_insert_rows.sql
+            relativeToChangelogFile: true
