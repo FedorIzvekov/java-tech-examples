@@ -1,0 +1,40 @@
+server:
+  port: 8089
+  shutdown: "graceful"
+
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: "1m"
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/test_database?currentSchema=cache_schema
+    username: test_user
+    password: test_user_123
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  liquibase:
+    enabled: true
+    default-schema: cache_schema
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      default_schema: ${spring.liquibase.default-schema}
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: shutdown
+
+logging:
+  pattern:
+    console: "%magenta(%d) %highlight(%-5level)[%cyan(%t)] %yellow(%logger{1.}): - %msg%n%throwable"
+  level:
+    com.fedorizvekov.caching: INFO
+    org.hibernate.SQL: DEBUG
+    org.springframework.jdbc.core: DEBUG

@@ -1,0 +1,21 @@
+networks:
+  postgresql_network:
+    driver: bridge
+
+services:
+  postgresql:
+    container_name: db-postgresql
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_user_123
+      POSTGRES_DB: test_database
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../../../data/postgresql/data:/var/lib/postgresql/data
+      - ./sql/postgresql/init_postgresql_database.sql:/docker-entrypoint-initdb.d/init_postgresql_database.sql
+    networks:
+      - postgresql_network

@@ -4,6 +4,7 @@ The goal of the java-tech-examples project is to provide examples of using vario
 It consists of code examples, configurations and instructions divided into modules.
 
 This project has modules:
+* [Caching](caching/README.md#project-caching)
 * [Database ClickHouse](db-clickhouse/README.md#project-database-clickhouse)
 * [Database MsSQL](db-mssql/README.md#project-database-mssql)
 * [Database MySQL](db-mysql/README.md#project-database-mysql)

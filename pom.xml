@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>caching</module>
         <module>db-clickhouse</module>
         <module>db-mssql</module>
         <module>db-mysql</module>
