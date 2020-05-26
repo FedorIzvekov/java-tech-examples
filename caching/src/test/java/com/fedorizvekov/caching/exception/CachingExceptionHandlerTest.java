@@ -2,6 +2,7 @@ package com.fedorizvekov.caching.exception;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.stream.Stream;
 import javax.persistence.PersistenceException;
 import com.fedorizvekov.caching.service.DataService;
+import com.fedorizvekov.caching.service.StatStatementService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,15 +32,18 @@ class CachingExceptionHandlerTest {
     private static final long ID = 1L;
     private static final RequestBuilder READ_BY_ID = get("/by/{id}/from/{cacheType}", ID, "simple");
     private static final RequestBuilder READ_ALL = get("/all/from/{cacheType}", "simple");
+    private static final RequestBuilder READ_STAT_STATEMENTS = get("/stat/statements/by/{tableName}", "test_table_name");
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private DataService dataService;
+    @MockBean
+    private StatStatementService statStatementService;
 
     private static Stream<Arguments> provideException() {
-        return Stream.of(READ_BY_ID, READ_ALL).map(Arguments::of);
+        return Stream.of(READ_BY_ID, READ_ALL, READ_STAT_STATEMENTS).map(Arguments::of);
     }
 
 
@@ -65,6 +70,7 @@ class CachingExceptionHandlerTest {
 
         doThrow.when(dataService).findById(any(CacheType.class), anyLong());
         doThrow.when(dataService).findAll(any(CacheType.class));
+        doThrow.when(statStatementService).getStatStatementByTableName(anyString());
 
         mockMvc.perform(requestBuilder)
                 .andDo(print())
@@ -83,6 +89,7 @@ class CachingExceptionHandlerTest {
 
         doThrow.when(dataService).findById(any(CacheType.class), anyLong());
         doThrow.when(dataService).findAll(any(CacheType.class));
+        doThrow.when(statStatementService).getStatStatementByTableName(anyString());
 
         mockMvc.perform(requestBuilder)
                 .andDo(print())

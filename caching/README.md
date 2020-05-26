@@ -37,11 +37,10 @@ java -jar ./target/caching-1.0.0-SNAPSHOT.jar
 
 ## Checking
 
-### JPA
-
 ```
 curl -v http://localhost:8089/by/1/from/simple
 curl -v http://localhost:8089/all/from/simple
+curl -v http://localhost:8089/stat/statements/by/cached_data
 ```
 
 ## Stopping

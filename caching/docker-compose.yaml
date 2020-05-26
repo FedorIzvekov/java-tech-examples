@@ -17,5 +17,7 @@ services:
     volumes:
       - ../../../data/postgresql/data:/var/lib/postgresql/data
       - ./sql/postgresql/init_postgresql_database.sql:/docker-entrypoint-initdb.d/init_postgresql_database.sql
+    command: >
+      postgres -c shared_preload_libraries=pg_stat_statements
     networks:
       - postgresql_network

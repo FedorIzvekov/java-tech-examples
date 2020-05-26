@@ -8,7 +8,8 @@ public class PostgresqlExtension implements Extension {
     static {
         PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>(PostgreSQLContainer.IMAGE)
                 .withDatabaseName("test_database")
-                .withInitScript("init_postgresql_database.sql");
+                .withInitScript("init_postgresql_database.sql")
+                .withCommand("postgres", "-c", "shared_preload_libraries=pg_stat_statements");
 
         POSTGRESQL_CONTAINER.start();
 

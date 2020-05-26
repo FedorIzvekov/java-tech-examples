@@ -1,1 +1,3 @@
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+
 CREATE SCHEMA IF NOT EXISTS cache_schema;
