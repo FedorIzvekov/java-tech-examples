@@ -22,6 +22,9 @@ public class DataServiceImpl implements DataService {
         Optional<CachedData> cachedData;
 
         switch (cacheType) {
+            case CAFFEINE:
+                cachedData = cacheService.caffeineFindById(id);
+                break;
             case SIMPLE:
             default:
                 cachedData = cacheService.simpleFindById(id);
@@ -37,6 +40,9 @@ public class DataServiceImpl implements DataService {
         List<CachedData> cachedData;
 
         switch (cacheType) {
+            case CAFFEINE:
+                cachedData = cacheService.caffeineFindAll();
+                break;
             case SIMPLE:
             default:
                 cachedData = cacheService.simpleFindAll();

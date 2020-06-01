@@ -6,6 +6,10 @@ import com.fedorizvekov.caching.model.entity.CachedData;
 
 public interface CacheService {
 
+    Optional<CachedData> caffeineFindById(long id);
+
+    List<CachedData> caffeineFindAll();
+
     Optional<CachedData> simpleFindById(long id);
 
     List<CachedData> simpleFindAll();

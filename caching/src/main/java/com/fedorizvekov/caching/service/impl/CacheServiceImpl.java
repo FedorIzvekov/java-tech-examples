@@ -18,6 +18,18 @@ public class CacheServiceImpl implements CacheService {
     private final JdbcRepository jdbcRepository;
 
 
+    @Cacheable(value = "caffeineCache", cacheManager = "caffeineCacheManager")
+    public Optional<CachedData> caffeineFindById(long id) {
+        return jpaRepository.findById(id);
+    }
+
+
+    @Cacheable(value = "caffeineCache", cacheManager = "caffeineCacheManager")
+    public List<CachedData> caffeineFindAll() {
+        return jdbcRepository.findAll();
+    }
+
+
     @Cacheable(cacheNames = "simpleCache", cacheManager = "simpleCacheManager")
     public Optional<CachedData> simpleFindById(long id) {
         return jpaRepository.findById(id);

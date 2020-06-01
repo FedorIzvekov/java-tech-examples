@@ -10,8 +10,10 @@ import com.fedorizvekov.caching.model.entity.CachedData;
 import com.fedorizvekov.caching.repository.JdbcRepository;
 import com.fedorizvekov.caching.repository.JpaRepository;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheType;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.annotation.EnableCaching;
@@ -34,24 +36,42 @@ class CacheServiceImplTest {
 
 
     @DisplayName("Should invoke jpa find by id only once")
-    @Test
-    void shouldInvoke_jpaFindById_onlyOnce() {
+    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "SIMPLE"})
+    @ParameterizedTest
+    void shouldInvoke_jpaFindById_onlyOnce(CacheType cacheType) {
         when(jpaRepository.findById(anyLong())).thenReturn(of(CachedData.builder().id(ID).build()));
 
-        cacheService.simpleFindById(ID);
-        cacheService.simpleFindById(ID);
+        switch (cacheType) {
+            case CAFFEINE:
+                cacheService.caffeineFindById(ID);
+                cacheService.caffeineFindById(ID);
+                break;
+            case SIMPLE:
+                cacheService.simpleFindById(ID);
+                cacheService.simpleFindById(ID);
+                break;
+        }
 
         verify(jpaRepository).findById(ID);
     }
 
 
     @DisplayName("Should invoke jdbc find all only once")
-    @Test
-    void shouldInvoke_jdbcFindAll_onlyOnce() {
+    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "SIMPLE"})
+    @ParameterizedTest
+    void shouldInvoke_jdbcFindAll_onlyOnce(CacheType cacheType) {
         when(jpaRepository.findAll()).thenReturn(singletonList(CachedData.builder().id(ID).build()));
 
-        cacheService.simpleFindAll();
-        cacheService.simpleFindAll();
+        switch (cacheType) {
+            case CAFFEINE:
+                cacheService.caffeineFindAll();
+                cacheService.caffeineFindAll();
+                break;
+            case SIMPLE:
+                cacheService.simpleFindAll();
+                cacheService.simpleFindAll();
+                break;
+        }
 
         verify(jdbcRepository).findAll();
     }
