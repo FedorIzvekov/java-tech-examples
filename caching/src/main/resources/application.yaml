@@ -22,6 +22,12 @@ spring:
       ddl-auto: validate
       default_schema: ${spring.liquibase.default-schema}
 
+  redis:
+    host: localhost
+    port: 6379
+    password: test_user_123
+    timeout: 60000
+
 management:
   endpoint:
     shutdown:

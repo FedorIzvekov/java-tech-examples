@@ -10,6 +10,10 @@ public interface CacheService {
 
     List<CachedData> caffeineFindAll();
 
+    Optional<CachedData> redisFindById(long id);
+
+    List<CachedData> redisFindAll();
+
     Optional<CachedData> simpleFindById(long id);
 
     List<CachedData> simpleFindAll();

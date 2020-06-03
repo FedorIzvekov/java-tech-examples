@@ -1,5 +1,5 @@
 networks:
-  postgresql_network:
+  caching_network:
     driver: bridge
 
 services:
@@ -20,4 +20,16 @@ services:
     command: >
       postgres -c shared_preload_libraries=pg_stat_statements
     networks:
-      - postgresql_network
+      - caching_network
+
+  redis:
+    container_name: db-redis
+    image: redis
+    restart: unless-stopped
+    command: redis-server --requirepass test_user_123
+    ports:
+      - "6379:6379"
+    volumes:
+      - ../../../data/redis:/data
+    networks:
+      - caching_network

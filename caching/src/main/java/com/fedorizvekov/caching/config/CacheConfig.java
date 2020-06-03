@@ -1,6 +1,11 @@
 package com.fedorizvekov.caching.config;
 
+import static org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair.fromSerializer;
+
 import java.time.Duration;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -8,10 +13,25 @@ import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableCaching
 public class CacheConfig {
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        var objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
+        return objectMapper;
+    }
+
 
     @Primary
     @Bean
@@ -33,6 +53,22 @@ public class CacheConfig {
         cacheManager.setAllowNullValues(false);
         cacheManager.setCaffeine(caffeine);
         return cacheManager;
+    }
+
+
+    @Bean
+    public RedisCacheManager redisCacheManager(RedisConnectionFactory connectionFactory, ObjectMapper objectMapper) {
+
+        var config = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofHours(1))
+                .serializeKeysWith(fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)))
+                .disableCachingNullValues();
+
+        return RedisCacheManager
+                .builder(RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory))
+                .withCacheConfiguration("redisCache", config)
+                .build();
     }
 
 }

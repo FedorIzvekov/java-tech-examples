@@ -32,7 +32,7 @@ class DataServiceImplTest {
 
 
     @DisplayName("Should invoke correct findAll")
-    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "SIMPLE"})
+    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "REDIS", "SIMPLE"})
     @ParameterizedTest
     void shouldInvokeCorrect_findAll(CacheType cacheType) {
 
@@ -42,6 +42,9 @@ class DataServiceImplTest {
             case CAFFEINE:
                 verify(cacheService).caffeineFindAll();
                 break;
+            case REDIS:
+                verify(cacheService).redisFindAll();
+                break;
             case SIMPLE:
                 verify(cacheService).simpleFindAll();
                 break;
@@ -50,13 +53,16 @@ class DataServiceImplTest {
 
 
     @DisplayName("Should invoke correct findById")
-    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "SIMPLE"})
+    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "REDIS", "SIMPLE"})
     @ParameterizedTest
     void shouldInvokeCorrect_findById(CacheType cacheType) {
 
         switch (cacheType) {
             case CAFFEINE:
                 when(cacheService.caffeineFindById(anyLong())).thenReturn(cachedData);
+                break;
+            case REDIS:
+                when(cacheService.redisFindById(anyLong())).thenReturn(cachedData);
                 break;
             case SIMPLE:
                 when(cacheService.simpleFindById(anyLong())).thenReturn(cachedData);
@@ -68,6 +74,9 @@ class DataServiceImplTest {
         switch (cacheType) {
             case CAFFEINE:
                 verify(cacheService).caffeineFindById(ID);
+                break;
+            case REDIS:
+                verify(cacheService).redisFindById(ID);
                 break;
             case SIMPLE:
                 verify(cacheService).simpleFindById(ID);
