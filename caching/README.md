@@ -38,8 +38,8 @@ java -jar ./target/caching-1.0.0-SNAPSHOT.jar
 ## Checking
 
 ```
-curl -v http://localhost:8089/by/1/from/{caffein, redis, simple}
-curl -v http://localhost:8089/all/from/{caffein, redis, simple}
+curl -v http://localhost:8089/by/1/from/{caffein, couchbase, redis, simple}
+curl -v http://localhost:8089/all/from/{caffein, couchbase, redis, simple}
 curl -v http://localhost:8089/stat/statements/by/cached_data
 ```
 

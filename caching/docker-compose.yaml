@@ -22,6 +22,52 @@ services:
     networks:
       - caching_network
 
+  couchbase:
+    container_name: db-couchbase
+    image: couchbase
+    restart: unless-stopped
+    environment:
+      COUCHBASE_ADMINISTRATOR_USERNAME: test_user
+      COUCHBASE_ADMINISTRATOR_PASSWORD: test_user_123
+    ports:
+      - "8091-8096:8091-8096"
+      - "11210:11210"
+    volumes:
+      - ../../../data/couchbase:/opt/couchbase/var
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://db-couchbase:8091" ]
+      interval: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - caching_network
+
+  couchbase-init:
+    container_name: couchbase-init
+    image: couchbase
+    depends_on:
+      couchbase:
+        condition: service_healthy
+    command: >
+      sh -c '
+      /opt/couchbase/bin/couchbase-cli cluster-init
+      --cluster db-couchbase
+      --cluster-username test_user
+      --cluster-password test_user_123
+      --services data,index,query
+      --cluster-ramsize 512
+      --index-storage-setting default;
+      /opt/couchbase/bin/couchbase-cli bucket-create
+      --cluster db-couchbase:8091
+      --username test_user
+      --password test_user_123
+      --bucket test_bucket
+      --bucket-type couchbase
+      --bucket-ramsize 256;
+      '
+    networks:
+      - caching_network
+
   redis:
     container_name: db-redis
     image: redis

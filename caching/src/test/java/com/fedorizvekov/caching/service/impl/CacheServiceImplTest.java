@@ -6,10 +6,12 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fedorizvekov.caching.extension.CouchbaseExtension;
 import com.fedorizvekov.caching.extension.RedisExtension;
 import com.fedorizvekov.caching.model.entity.CachedData;
 import com.fedorizvekov.caching.repository.JdbcRepository;
 import com.fedorizvekov.caching.repository.JpaRepository;
+import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 @EnableAutoConfiguration(exclude = LiquibaseAutoConfiguration.class)
-@ExtendWith(RedisExtension.class)
+@ExtendWith({CouchbaseExtension.class, RedisExtension.class})
 class CacheServiceImplTest {
 
     private final long ID = 1L;
@@ -32,13 +34,15 @@ class CacheServiceImplTest {
     private CacheServiceImpl cacheService;
 
     @MockBean
+    private HikariDataSource hikariDataSource;
+    @MockBean
     private JpaRepository jpaRepository;
     @MockBean
     private JdbcRepository jdbcRepository;
 
 
     @DisplayName("Should invoke jpa find by id only once")
-    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "REDIS", "SIMPLE"})
+    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "COUCHBASE", "REDIS", "SIMPLE"})
     @ParameterizedTest
     void shouldInvoke_jpaFindById_onlyOnce(CacheType cacheType) {
         when(jpaRepository.findById(anyLong())).thenReturn(of(CachedData.builder().id(ID).build()));
@@ -47,6 +51,10 @@ class CacheServiceImplTest {
             case CAFFEINE:
                 cacheService.caffeineFindById(ID);
                 cacheService.caffeineFindById(ID);
+                break;
+            case COUCHBASE:
+                cacheService.couchbaseFindById(ID);
+                cacheService.couchbaseFindById(ID);
                 break;
             case REDIS:
                 cacheService.redisFindById(ID);
@@ -63,7 +71,7 @@ class CacheServiceImplTest {
 
 
     @DisplayName("Should invoke jdbc find all only once")
-    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "REDIS", "SIMPLE"})
+    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "COUCHBASE", "REDIS", "SIMPLE"})
     @ParameterizedTest
     void shouldInvoke_jdbcFindAll_onlyOnce(CacheType cacheType) {
         when(jpaRepository.findAll()).thenReturn(singletonList(CachedData.builder().id(ID).build()));
@@ -72,6 +80,10 @@ class CacheServiceImplTest {
             case CAFFEINE:
                 cacheService.caffeineFindAll();
                 cacheService.caffeineFindAll();
+                break;
+            case COUCHBASE:
+                cacheService.couchbaseFindAll();
+                cacheService.couchbaseFindAll();
                 break;
             case REDIS:
                 cacheService.redisFindAll();

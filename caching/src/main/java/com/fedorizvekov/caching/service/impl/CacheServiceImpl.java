@@ -30,6 +30,18 @@ public class CacheServiceImpl implements CacheService {
     }
 
 
+    @Cacheable(value = "couchbaseCache", cacheManager = "couchbaseCacheManager", key = "#id")
+    public Optional<CachedData> couchbaseFindById(long id) {
+        return jpaRepository.findById(id);
+    }
+
+
+    @Cacheable(value = "couchbaseCache", cacheManager = "couchbaseCacheManager", key = "'all'")
+    public List<CachedData> couchbaseFindAll() {
+        return jdbcRepository.findAll();
+    }
+
+
     @Cacheable(value = "redisCache", cacheManager = "redisCacheManager", key = "#id")
     public Optional<CachedData> redisFindById(long id) {
         return jpaRepository.findById(id);

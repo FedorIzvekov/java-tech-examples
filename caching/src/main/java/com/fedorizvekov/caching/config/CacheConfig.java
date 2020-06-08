@@ -3,16 +3,22 @@ package com.fedorizvekov.caching.config;
 import static org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair.fromSerializer;
 
 import java.time.Duration;
+import com.couchbase.client.java.Cluster;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fedorizvekov.caching.model.converter.CouchbaseTranscoder;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.couchbase.SimpleCouchbaseClientFactory;
+import org.springframework.data.couchbase.cache.CouchbaseCacheConfiguration;
+import org.springframework.data.couchbase.cache.CouchbaseCacheManager;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
@@ -53,6 +59,26 @@ public class CacheConfig {
         cacheManager.setAllowNullValues(false);
         cacheManager.setCaffeine(caffeine);
         return cacheManager;
+    }
+
+
+    @Bean
+    public CouchbaseCacheManager couchbaseCacheManager(
+            Cluster cluster,
+            @Value("${spring.couchbase.bucket}") String bucket,
+            ObjectMapper objectMapper
+    ) {
+
+        var config = CouchbaseCacheConfiguration.defaultCacheConfig()
+                .entryExpiry(Duration.ofHours(1))
+                .valueTranscoder(new CouchbaseTranscoder(objectMapper))
+                .disableCachingNullValues();
+
+        return CouchbaseCacheManager
+                .builder(new SimpleCouchbaseClientFactory(cluster, bucket, "_default"))
+                .cacheDefaults(config)
+                .withCacheConfiguration("couchbaseCache", config)
+                .build();
     }
 
 

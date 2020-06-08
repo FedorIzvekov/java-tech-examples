@@ -22,6 +22,12 @@ spring:
       ddl-auto: validate
       default_schema: ${spring.liquibase.default-schema}
 
+  couchbase:
+    connection-string: couchbase://localhost
+    username: test_user
+    password: test_user_123
+    bucket: test_bucket
+
   redis:
     host: localhost
     port: 6379
