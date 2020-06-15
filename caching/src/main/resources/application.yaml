@@ -28,6 +28,10 @@ spring:
     password: test_user_123
     bucket: test_bucket
 
+  hazelcast:
+    network: localhost:5701
+    cluster: test-cluster
+
   redis:
     host: localhost
     port: 6379

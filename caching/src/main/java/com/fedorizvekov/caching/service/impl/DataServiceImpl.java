@@ -28,6 +28,9 @@ public class DataServiceImpl implements DataService {
             case COUCHBASE:
                 cachedData = cacheService.couchbaseFindById(id);
                 break;
+            case HAZELCAST:
+                cachedData = cacheService.hazelcastFindById(id);
+                break;
             case REDIS:
                 cachedData = cacheService.redisFindById(id);
                 break;
@@ -51,6 +54,9 @@ public class DataServiceImpl implements DataService {
                 break;
             case COUCHBASE:
                 cachedData = cacheService.couchbaseFindAll();
+                break;
+            case HAZELCAST:
+                cachedData = cacheService.hazelcastFindAll();
                 break;
             case REDIS:
                 cachedData = cacheService.redisFindAll();

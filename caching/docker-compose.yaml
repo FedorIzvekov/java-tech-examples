@@ -68,6 +68,20 @@ services:
     networks:
       - caching_network
 
+  hazelcast:
+    container_name: db-hazelcast
+    image: hazelcast/hazelcast
+    restart: unless-stopped
+    environment:
+      - HZ_NETWORK_PUBLICADDRESS=localhost:5701
+      - HZ_CLUSTERNAME=test-cluster
+    ports:
+      - "5701:5701"
+    volumes:
+      - ./config/hazelcast.xml:/opt/hazelcast/config/hazelcast.xml
+    networks:
+      - caching_network
+
   redis:
     container_name: db-redis
     image: redis

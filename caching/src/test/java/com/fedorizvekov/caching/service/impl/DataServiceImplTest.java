@@ -32,7 +32,7 @@ class DataServiceImplTest {
 
 
     @DisplayName("Should invoke correct findAll")
-    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "COUCHBASE", "REDIS", "SIMPLE"})
+    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "COUCHBASE", "HAZELCAST", "REDIS", "SIMPLE"})
     @ParameterizedTest
     void shouldInvokeCorrect_findAll(CacheType cacheType) {
 
@@ -45,6 +45,9 @@ class DataServiceImplTest {
             case COUCHBASE:
                 verify(cacheService).couchbaseFindAll();
                 break;
+            case HAZELCAST:
+                verify(cacheService).hazelcastFindAll();
+                break;
             case REDIS:
                 verify(cacheService).redisFindAll();
                 break;
@@ -56,7 +59,7 @@ class DataServiceImplTest {
 
 
     @DisplayName("Should invoke correct findById")
-    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "COUCHBASE", "REDIS", "SIMPLE"})
+    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "COUCHBASE", "HAZELCAST", "REDIS", "SIMPLE"})
     @ParameterizedTest
     void shouldInvokeCorrect_findById(CacheType cacheType) {
 
@@ -66,6 +69,9 @@ class DataServiceImplTest {
                 break;
             case COUCHBASE:
                 when(cacheService.couchbaseFindById(anyLong())).thenReturn(cachedData);
+                break;
+            case HAZELCAST:
+                when(cacheService.hazelcastFindById(anyLong())).thenReturn(cachedData);
                 break;
             case REDIS:
                 when(cacheService.redisFindById(anyLong())).thenReturn(cachedData);
@@ -83,6 +89,9 @@ class DataServiceImplTest {
                 break;
             case COUCHBASE:
                 verify(cacheService).couchbaseFindById(ID);
+                break;
+            case HAZELCAST:
+                verify(cacheService).hazelcastFindById(ID);
                 break;
             case REDIS:
                 verify(cacheService).redisFindById(ID);

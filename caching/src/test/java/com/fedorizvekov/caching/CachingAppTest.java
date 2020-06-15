@@ -3,6 +3,7 @@ package com.fedorizvekov.caching;
 import com.couchbase.client.java.Cluster;
 import com.fedorizvekov.caching.repository.JdbcRepository;
 import com.fedorizvekov.caching.repository.JpaRepository;
+import com.hazelcast.spring.cache.HazelcastCacheManager;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,8 @@ class CachingAppTest {
     private Cluster cluster;
     @MockBean
     private CouchbaseCacheManager couchbaseCacheManager;
+    @MockBean
+    private HazelcastCacheManager hazelcastCacheManager;
 
 
     @DisplayName("Should context loads")

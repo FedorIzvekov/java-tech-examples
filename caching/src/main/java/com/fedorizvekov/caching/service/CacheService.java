@@ -14,6 +14,10 @@ public interface CacheService {
 
     List<CachedData> couchbaseFindAll();
 
+    Optional<CachedData> hazelcastFindById(long id);
+
+    List<CachedData> hazelcastFindAll();
+
     Optional<CachedData> redisFindById(long id);
 
     List<CachedData> redisFindAll();

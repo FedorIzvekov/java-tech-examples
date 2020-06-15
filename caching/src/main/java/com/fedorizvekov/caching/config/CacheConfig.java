@@ -8,7 +8,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fedorizvekov.caching.model.converter.CouchbaseTranscoder;
+import com.fedorizvekov.caching.model.converter.HazelcastSerializer;
+import com.fedorizvekov.caching.model.entity.CachedData;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.config.SerializerConfig;
+import com.hazelcast.spring.cache.HazelcastCacheManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -79,6 +85,27 @@ public class CacheConfig {
                 .cacheDefaults(config)
                 .withCacheConfiguration("couchbaseCache", config)
                 .build();
+    }
+
+
+    @Bean
+    public HazelcastCacheManager hazelcastCacheManager(
+            @Value("${spring.hazelcast.network}") String network,
+            @Value("${spring.hazelcast.cluster}") String cluster,
+            ObjectMapper objectMapper
+    ) {
+
+        var clientConfig = new ClientConfig();
+        clientConfig.setClusterName(cluster);
+        clientConfig.getNetworkConfig().addAddress(network);
+
+        clientConfig.getSerializationConfig().addSerializerConfig(
+                new SerializerConfig()
+                        .setTypeClass(CachedData.class)
+                        .setImplementation(new HazelcastSerializer<>(objectMapper, CachedData.class))
+        );
+
+        return new HazelcastCacheManager(HazelcastClient.newHazelcastClient(clientConfig));
     }
 
 
