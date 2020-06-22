@@ -45,7 +45,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: shutdown
+        include: shutdown, prometheus
 
 logging:
   pattern:

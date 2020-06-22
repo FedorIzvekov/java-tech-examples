@@ -38,10 +38,10 @@ class JdbcRepositoryTest {
         var result = repository.findAll();
 
         assertAll(
-                () -> assertThat(result.size()).isEqualTo(2),
+                () -> assertThat(result.size()).isEqualTo(100),
                 () -> assertThat(result.get(0)).isInstanceOfAny(CachedData.class),
-                () -> assertThat(result.get(0).getStringValue()).isEqualTo("First Raw"),
-                () -> assertThat(result.get(1).getStringValue()).isEqualTo("Second Raw")
+                () -> assertThat(result.get(0).getStringValue()).isEqualTo("Raw 1"),
+                () -> assertThat(result.get(1).getStringValue()).isEqualTo("Raw 2")
         );
     }
 

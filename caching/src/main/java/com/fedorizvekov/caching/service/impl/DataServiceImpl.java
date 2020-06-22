@@ -6,6 +6,7 @@ import com.fedorizvekov.caching.exception.NotFoundException;
 import com.fedorizvekov.caching.model.entity.CachedData;
 import com.fedorizvekov.caching.service.CacheService;
 import com.fedorizvekov.caching.service.DataService;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.cache.CacheType;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class DataServiceImpl implements DataService {
     private final CacheService cacheService;
 
 
+    @Timed(value = "get.data.by.id.duration")
     public CachedData findById(CacheType cacheType, long id) {
 
         Optional<CachedData> cachedData;
@@ -44,6 +46,7 @@ public class DataServiceImpl implements DataService {
     }
 
 
+    @Timed(value = "get.all.data.duration")
     public List<CachedData> findAll(CacheType cacheType) {
 
         List<CachedData> cachedData;

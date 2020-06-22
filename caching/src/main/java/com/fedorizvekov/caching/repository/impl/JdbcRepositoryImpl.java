@@ -4,6 +4,7 @@ import java.util.List;
 import com.fedorizvekov.caching.model.dto.StatStatement;
 import com.fedorizvekov.caching.model.entity.CachedData;
 import com.fedorizvekov.caching.repository.JdbcRepository;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,6 +26,7 @@ public class JdbcRepositoryImpl implements JdbcRepository {
     private final RowMapper<StatStatement> statStatementRowMapper;
 
 
+    @Timed(value = "get.all.data.duration", extraTags = {"source", "POSTGRESQL"})
     public List<CachedData> findAll() {
 
         return jdbcTemplate.query(SQL_FIND_ALL_CACHED_DATA, dataRowMapper);

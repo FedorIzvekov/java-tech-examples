@@ -29,7 +29,7 @@ class JpaRepositoryTest {
 
         assertAll(
                 () -> assertThat(result).isInstanceOfAny(CachedData.class),
-                () -> assertThat(result.getStringValue()).isEqualTo("First Raw")
+                () -> assertThat(result.getStringValue()).isEqualTo("Raw 1")
         );
     }
 
