@@ -86,7 +86,7 @@ services:
     container_name: db-redis
     image: redis
     restart: unless-stopped
-    command: redis-server --requirepass test_user_123
+    command: redis-server --requirepass test_user_123 --save "" --appendonly no
     ports:
       - "6379:6379"
     volumes:
