@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fedorizvekov.caching.service.DataService;
+import com.fedorizvekov.caching.service.CacheService;
 import com.fedorizvekov.caching.service.StatStatementService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,32 +30,32 @@ class CachingControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private DataService dataService;
+    private CacheService cacheService;
     @MockBean
     private StatStatementService statStatementService;
 
 
-    @DisplayName("Should invoke findAll")
+    @DisplayName("Should invoke getAllFromCache")
     @EnumSource(CacheType.class)
     @ParameterizedTest
-    void shouldInvoke_findAll(CacheType cacheType) throws Exception {
+    void shouldInvoke_getAllFromCache(CacheType cacheType) throws Exception {
         mockMvc.perform(get(GET_ALL_ENDPOINT, cacheType.name()))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(dataService).findAll(eq(cacheType));
+        verify(cacheService).findAll(eq(cacheType));
     }
 
 
-    @DisplayName("Should invoke findById")
+    @DisplayName("Should invoke getByIdFromCache")
     @EnumSource(CacheType.class)
     @ParameterizedTest
-    void shouldInvoke_findById(CacheType cacheType) throws Exception {
+    void shouldInvoke_getByIdFromCache(CacheType cacheType) throws Exception {
         mockMvc.perform(get(GET_BY_ID_ENDPOINT, ID, cacheType.name()))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        verify(dataService).findById(eq(cacheType), eq(ID));
+        verify(cacheService).findById(eq(cacheType), eq(ID));
     }
 
 

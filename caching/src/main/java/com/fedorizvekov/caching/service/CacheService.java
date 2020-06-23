@@ -1,29 +1,13 @@
 package com.fedorizvekov.caching.service;
 
 import java.util.List;
-import java.util.Optional;
 import com.fedorizvekov.caching.model.entity.CachedData;
+import org.springframework.boot.autoconfigure.cache.CacheType;
 
 public interface CacheService {
 
-    Optional<CachedData> caffeineFindById(long id);
+    CachedData findById(CacheType cacheType, long id);
 
-    List<CachedData> caffeineFindAll();
-
-    Optional<CachedData> couchbaseFindById(long id);
-
-    List<CachedData> couchbaseFindAll();
-
-    Optional<CachedData> hazelcastFindById(long id);
-
-    List<CachedData> hazelcastFindAll();
-
-    Optional<CachedData> redisFindById(long id);
-
-    List<CachedData> redisFindAll();
-
-    Optional<CachedData> simpleFindById(long id);
-
-    List<CachedData> simpleFindAll();
+    List<CachedData> findAll(CacheType cacheType);
 
 }

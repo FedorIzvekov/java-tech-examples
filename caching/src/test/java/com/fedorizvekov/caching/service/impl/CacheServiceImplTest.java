@@ -2,10 +2,13 @@ package com.fedorizvekov.caching.service.impl;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+import com.fedorizvekov.caching.exception.NotFoundException;
 import com.fedorizvekov.caching.extension.CouchbaseExtension;
 import com.fedorizvekov.caching.extension.HazelcastExtension;
 import com.fedorizvekov.caching.extension.RedisExtension;
@@ -28,6 +31,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 class CacheServiceImplTest {
 
     private final long ID = 1L;
+    private final long INVALID_ID = 2L;
 
     @Autowired
     private CacheServiceImpl cacheService;
@@ -42,69 +46,38 @@ class CacheServiceImplTest {
     private LiquibaseAutoConfiguration.LiquibaseConfiguration liquibaseConfiguration;
 
 
-    @DisplayName("Should invoke jpa find by id only once")
+    @DisplayName("Should invoke jpa only once")
     @EnumSource(value = CacheType.class, names = {"CAFFEINE", "COUCHBASE", "HAZELCAST", "REDIS", "SIMPLE"})
     @ParameterizedTest
-    void shouldInvoke_jpaFindById_onlyOnce(CacheType cacheType) {
-        when(jpaRepository.findById(anyLong())).thenReturn(of(CachedData.builder().id(ID).build()));
+    void shouldInvokeJpa_onlyOnce(CacheType cacheType) {
 
-        switch (cacheType) {
-            case CAFFEINE:
-                cacheService.caffeineFindById(ID);
-                cacheService.caffeineFindById(ID);
-                break;
-            case COUCHBASE:
-                cacheService.couchbaseFindById(ID);
-                cacheService.couchbaseFindById(ID);
-                break;
-            case HAZELCAST:
-                cacheService.hazelcastFindById(ID);
-                cacheService.hazelcastFindById(ID);
-                break;
-            case REDIS:
-                cacheService.redisFindById(ID);
-                cacheService.redisFindById(ID);
-                break;
-            case SIMPLE:
-                cacheService.simpleFindById(ID);
-                cacheService.simpleFindById(ID);
-                break;
-        }
+        // findById OK
+        when(jpaRepository.findById(eq(ID))).thenReturn(of(CachedData.builder().id(ID).build()));
+
+        cacheService.findById(cacheType, ID);
+        cacheService.findById(cacheType, ID);
 
         verify(jpaRepository).findById(ID);
-    }
 
 
-    @DisplayName("Should invoke jdbc find all only once")
-    @EnumSource(value = CacheType.class, names = {"CAFFEINE", "COUCHBASE", "HAZELCAST", "REDIS", "SIMPLE"})
-    @ParameterizedTest
-    void shouldInvoke_jdbcFindAll_onlyOnce(CacheType cacheType) {
+        // findAll OK
         when(jpaRepository.findAll()).thenReturn(singletonList(CachedData.builder().id(ID).build()));
 
-        switch (cacheType) {
-            case CAFFEINE:
-                cacheService.caffeineFindAll();
-                cacheService.caffeineFindAll();
-                break;
-            case COUCHBASE:
-                cacheService.couchbaseFindAll();
-                cacheService.couchbaseFindAll();
-                break;
-            case HAZELCAST:
-                cacheService.hazelcastFindAll();
-                cacheService.hazelcastFindAll();
-                break;
-            case REDIS:
-                cacheService.redisFindAll();
-                cacheService.redisFindAll();
-                break;
-            case SIMPLE:
-                cacheService.simpleFindAll();
-                cacheService.simpleFindAll();
-                break;
-        }
+        cacheService.findAll(cacheType);
+        cacheService.findAll(cacheType);
 
         verify(jdbcRepository).findAll();
+
+
+        // findById NotFoundException
+
+        when(jpaRepository.findById(eq(INVALID_ID))).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> cacheService.findById(cacheType, INVALID_ID))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Not found CachedData with id '2'");
+
+        verify(jpaRepository).findById(INVALID_ID);
     }
 
 }
